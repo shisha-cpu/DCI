@@ -4,34 +4,31 @@ const { Schema } = mongoose;
 const FileSchema = new Schema({
   filename: {
     type: String,
-    required: true,
+    required: true
+  },
+  originalname: {
+    type: String,
+    required: true
   },
   path: {
     type: String,
-    required: true,
-  },
-  size: {
-    type: Number,
-    required: true,
+    required: true
   },
   mimetype: {
     type: String,
-    required: true,
+    required: true
   },
-  type: {
-    type: String,
-    enum: ['image', 'video', 'document'],
-    required: true,
+  size: {
+    type: Number,
+    required: true
   },
-  uploadedBy: {
+  createdBy: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+    required: true
+  }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('File', FileSchema);

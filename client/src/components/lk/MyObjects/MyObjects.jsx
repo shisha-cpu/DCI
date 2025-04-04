@@ -1,16 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import styles from './MyObjects.module.css'
-import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown } from 'react-icons/fi'
+import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown, FiImage, FiUpload } from 'react-icons/fi'
 
 export default function MyObjects() {
   const [activeFilter, setActiveFilter] = useState('all')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [listings, setListings] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [images, setImages] = useState([])
+  const fileInputRef = useRef(null)
   
   const [formData, setFormData] = useState({
     title: '',
@@ -60,19 +64,75 @@ export default function MyObjects() {
     fetchUserListings()
   }, [user])
 
-  // Удаление объявления
-  const handleDeleteListing = async (listingId) => {
+  // Обработка загрузки файлов
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+  
+    setUploading(true);
+    setUploadProgress(0);
+  
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('images', file);
+    });
+  
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings/${listingId}`, {
-        method: 'DELETE'
-      })
-
-      if (!response.ok) throw new Error('Ошибка удаления')
-
-      setListings(listings.filter(listing => listing._id !== listingId))
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+  
+      // Проверяем content-type ответа
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('Non-JSON response:', text);
+        throw new Error('Сервер вернул неожиданный ответ');
+      }
+  
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Ошибка загрузки изображений');
+      }
+  
+      // Обрабатываем ответ сервера
+      let uploadedUrls = [];
+      if (data.urls) {
+        uploadedUrls = data.urls;
+      } else if (data.data && data.data.urls) {
+        uploadedUrls = data.data.urls;
+      } else if (Array.isArray(data.data)) {
+        uploadedUrls = data.data;
+      } else if (data.data) {
+        uploadedUrls = [data.data];
+      } else {
+        uploadedUrls = [data];
+      }
+  
+      // Преобразуем в массив URL
+      const newImages = uploadedUrls.map(item => {
+        if (typeof item === 'string') return item;
+        return item.url || item.path;
+      });
+  
+      setImages(prev => [...prev, ...newImages]);
+      
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error uploading images:', error.message);
+      alert(error.message);
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
     }
+  };
+  // Удаление изображения
+  const handleRemoveImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index))
   }
 
   // Создание объявления
@@ -83,9 +143,11 @@ export default function MyObjects() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify({
           ...formData,
+          images,
           createdBy: user.user._id,
           status: 'pending'
         })
@@ -97,6 +159,7 @@ export default function MyObjects() {
       setListings([...listings, data])
       setIsModalOpen(false)
       resetForm()
+      setImages([])
     } catch (error) {
       console.error('Error:', error)
     }
@@ -193,12 +256,23 @@ export default function MyObjects() {
                   </button>
                 </div>
               </div>
+              
+              {/* Превью изображений */}
+              {listing.images?.length > 0 && (
+                <div className={styles.imagePreview}>
+                  <img 
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${listing.images[0].path}`} 
+                    alt={listing.title}
+                  />
+                </div>
+              )}
+              
               <p className={styles.description}>{listing.description}</p>
               
               <div className={styles.details}>
                 <div className={styles.detailItem}>
                   <span>Цена:</span>
-                  {/* <strong>{listing.price.toLocaleString()} ₽</strong> */}
+                  <strong>{listing.price} ₽</strong>
                 </div>
                 <div className={styles.detailItem}>
                   <span>Город:</span>
@@ -248,6 +322,7 @@ export default function MyObjects() {
                 onClick={() => {
                   setIsModalOpen(false)
                   resetForm()
+                  setImages([])
                 }}
               >
                 <FiX size={24} />
@@ -333,6 +408,53 @@ export default function MyObjects() {
                   />
                 </div>
 
+                {/* Блок загрузки изображений */}
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label>Фотографии объекта</label>
+                  <div className={styles.uploadContainer}>
+                    <div 
+                      className={styles.uploadArea}
+                      onClick={() => fileInputRef.current.click()}
+                    >
+                      <FiUpload size={24} />
+                      <p>Перетащите файлы сюда или нажмите для выбора</p>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        multiple
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                      />
+                    </div>
+                    
+                    {uploading && (
+                      <div className={styles.progressBar}>
+                        <div 
+                          className={styles.progressFill} 
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                        <span>{uploadProgress}%</span>
+                      </div>
+                    )}
+
+                    <div className={styles.uploadedImages}>
+                      {images.map((img, index) => (
+                        <div key={index} className={styles.imageItem}>
+                          <img src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${img}`} alt={`Preview ${index}`} />
+                          <button 
+                            type="button"
+                            className={styles.removeImage}
+                            onClick={() => handleRemoveImage(index)}
+                          >
+                            <FiX size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label>Описание *</label>
                   <textarea
@@ -353,6 +475,7 @@ export default function MyObjects() {
                   onClick={() => {
                     setIsModalOpen(false)
                     resetForm()
+                    setImages([])
                   }}
                 >
                   Отменить
@@ -360,8 +483,9 @@ export default function MyObjects() {
                 <button
                   type="submit"
                   className={styles.primaryButton}
+                  disabled={uploading}
                 >
-                  Создать объявление
+                  {uploading ? 'Загрузка...' : 'Создать объявление'}
                 </button>
               </div>
             </form>
