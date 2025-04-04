@@ -1,0 +1,219 @@
+/* app.module.css */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .hero {
+    background-color: #f0fdf4;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .heroTitle {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #166534;
+    margin-bottom: 1rem;
+  }
+  
+  .heroText {
+    font-size: 1.125rem;
+    color: #15803d;
+    margin-bottom: 1.5rem;
+  }
+  
+  .heroButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .primaryButton {
+    background-color: #16a34a;
+    color: white;
+  }
+  
+  .primaryButton:hover {
+    background-color: #15803d;
+  }
+  
+  .secondaryButton {
+    border: 2px solid #16a34a;
+    color: #16a34a;
+  }
+  
+  .secondaryButton:hover {
+    background-color: #f0fdf4;
+  }
+  
+  .featuredSection {
+    margin-bottom: 3rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #166534;
+    margin-bottom: 1.5rem;
+  }
+  
+  .listingsGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .listingsGrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .listingsGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .benefitsSection {
+    background-color: #166534;
+    color: white;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .benefitsTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  
+  .benefitsGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .benefitsGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .benefitCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .benefitIcon {
+    background-color: #16a34a;
+    padding: 1rem;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+  }
+  
+  .benefitIcon svg {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .benefitTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .listingCard {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  
+  .listingCard:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .listingImage {
+    position: relative;
+    height: 12rem;
+  }
+  
+  .listingImage img {
+    object-fit: cover;
+  }
+  
+  .listingBadge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: #16a34a;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .listingContent {
+    padding: 1rem;
+  }
+  
+  .listingTitle {
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .listingLocation {
+    color: #4b5563;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .listingPrice {
+    font-weight: 700;
+    color: #15803d;
+    font-size: 1.25rem;
+  }
+  
+  .listingArea {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .listingDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .listingButton {
+    display: block;
+    width: 100%;
+    background-color: #f0fdf4;
+    color: #166534;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+  }
+  
+  .listingButton:hover {
+    background-color: #dcfce7;
+  }

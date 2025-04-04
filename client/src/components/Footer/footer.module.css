@@ -1,0 +1,111 @@
+/* footer.module.css */
+
+.footer {
+    background-color: #14532d; /* green-900 */
+    color: white;
+    padding: 2rem 0;
+  }
+  
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .description {
+    color: #bbf7d0; /* green-200 */
+    line-height: 1.5;
+  }
+  
+  .sectionTitle {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+  }
+  
+  .linkList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .link {
+    color: #bbf7d0; /* green-200 */
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+  
+  .link:hover {
+    color: white;
+  }
+  
+  .contactItem {
+    color: #bbf7d0; /* green-200 */
+    line-height: 1.5;
+  }
+  
+  .subscribeText {
+    color: #bbf7d0; /* green-200 */
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  
+  .subscribeForm {
+    display: flex;
+  }
+  
+  .emailInput {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem 0 0 0.375rem;
+    border: none;
+    width: 100%;
+    color: #1e293b; /* gray-800 */
+    font-size: 0.875rem;
+  }
+  
+  .emailInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.5); /* green-400 with opacity */
+  }
+  
+  .submitButton {
+    background-color: #16a34a; /* green-600 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0.375rem 0.375rem 0;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: #15803d; /* green-700 */
+  }
+  
+  .copyright {
+    border-top: 1px solid #166534; /* green-800 */
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    text-align: center;
+    color: #86efac; /* green-300 */
+    font-size: 0.875rem;
+  }

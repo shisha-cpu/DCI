@@ -1,0 +1,131 @@
+.adminContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .adminHeader {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .togglePanel {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  .adminContent {
+    display: flex;
+    flex: 1;
+  }
+  
+  .adminPanel {
+    width: 250px;
+    background-color: #34495e;
+    color: white;
+    transition: transform 0.3s ease;
+    padding: 1rem;
+  }
+  
+  .adminPanel.open {
+    transform: translateX(0);
+  }
+  
+  .adminPanel:not(.open) {
+    transform: translateX(-100%);
+    position: absolute;
+    z-index: 100;
+    height: 100%;
+  }
+  
+  .navLink {
+    display: block;
+    color: #ecf0f1;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .navLink:hover {
+    background-color: #3d566e;
+  }
+  
+  .navLink.active {
+    background-color: #4CAF50;
+    font-weight: bold;
+  }
+  
+  .adminMain {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f5f5f5;
+  }
+  
+  .unauthorized {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+  
+  /* Dashboard styles */
+  .dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  
+  .statCard {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .statCard h3 {
+    color: #7f8c8d;
+    margin-top: 0;
+  }
+  
+  .statCard p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0.5rem 0 0;
+  }
+  
+  .recentActivity {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .recentActivity ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .recentActivity li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+  }

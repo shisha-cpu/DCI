@@ -1,0 +1,124 @@
+/* businessCategories.module.css */
+
+.section {
+    padding: 2rem 0;
+    background-color: white;
+  }
+  
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #166534;
+    margin-bottom: 1.5rem;
+  }
+  
+  .categoriesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .categoryCard {
+    background-color: #f8fafc;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .categoryCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-color: #bbf7d0;
+  }
+  
+  .categoryName {
+    font-weight: 600;
+    color: #166534;
+    margin-bottom: 0.5rem;
+  }
+  
+  .categoryCount {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+  
+  .investmentCard {
+    background: linear-gradient(to right, #166534, #22c55e);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    color: white;
+    margin-bottom: 2rem;
+  }
+  
+  .investmentTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .investmentReturn {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .investmentButton {
+    background-color: white;
+    color: #166534;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.2s ease;
+  }
+  
+  .investmentButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  }
+  
+  .sellBusiness {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0fdf4;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border: 1px solid #bbf7d0;
+  }
+  
+  .sellTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #166534;
+  }
+  
+  .sellDescription {
+    color: #64748b;
+    margin-top: 0.5rem;
+  }
+  
+  .sellButton {
+    background-color: #166534;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .sellButton:hover {
+    background-color: #15803d;
+  }

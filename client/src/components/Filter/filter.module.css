@@ -1,0 +1,127 @@
+.filterContainer {
+  background-color: #f8fafc;
+  padding: 2rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.filterContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.headerTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.categories {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.categoryButton {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.categoryButton:hover {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.categoryButtonActive {
+  background-color: #166534;
+  color: white;
+  border-color: #166534;
+}
+
+.filterForm {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.filterLabel {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.filterInput {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.filterInput:focus {
+  outline: none;
+  border-color: #86efac;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.filterButton {
+  background-color: #166534;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: fit-content;
+  font-size: 1rem;
+}
+
+.filterButton:hover {
+  background-color: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .headerTitle {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filterForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filterGroup {
+    width: 100%;
+  }
+  
+  .filterButton {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}

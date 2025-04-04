@@ -1,0 +1,103 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2E7D32;
+    margin-bottom: 30px;
+  }
+  
+  .categories {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .categoryButton {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: 1px solid #E0E0E0;
+    background: #F5F5F5;
+    color: #616161;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .categoryButton:hover {
+    background: #E8F5E9;
+    color: #2E7D32;
+  }
+  
+  .categoryButton.active {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+  }
+  
+  .statusFilters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    align-items: center;
+  }
+  
+  .statusButton {
+    padding: 6px 12px;
+    background: transparent;
+    color: #616161;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+  }
+  
+  .statusButton:hover {
+    color: #2E7D32;
+  }
+  
+  .statusButton.active {
+    color: #2E7D32;
+    font-weight: 500;
+  }
+  
+  .statusButton.active::after {
+    content: '●';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4CAF50;
+    font-size: 10px;
+  }
+  
+  .emptyState {
+    padding: 60px 0;
+    text-align: center;
+    background: #F1F8E9;
+    border-radius: 12px;
+    margin-top: 20px;
+    border: 1px dashed #81C784;
+  }
+  
+  .emptyIllustration {
+    margin-bottom: 20px;
+  }
+  
+  .emptyIllustration svg {
+    opacity: 0.8;
+  }
+  
+  .emptyText {
+    color: #2E7D32;
+    font-size: 16px;
+    margin: 0;
+  }
