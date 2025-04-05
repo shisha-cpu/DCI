@@ -43,16 +43,30 @@ app.use(morgan('dev'));
 app.use(limiter);
 
 // Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, 'public/uploads/listings');
+const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Serve static files with proper headers
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'), (req, res, next) => {
-  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  next();
-}))
+// Serve static files
+// Замените текущий middleware для статических файлов на этот:
+app.use('/uploads/listings', express.static(path.join(__dirname, 'uploads', 'listings'), {
+  setHeaders: (res) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
+app.get('/uploads/listings/:filename', (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', 'listings', req.params.filename);
+  
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).json({ 
+      success: false, 
+      message: 'File not found' 
+    });
+  }
+});
 
 // Routes
 app.use('/api/auth', authRoutes);

@@ -86,45 +86,26 @@ export default function MyObjects() {
         }
       });
   
-      // Проверяем content-type ответа
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        throw new Error('Сервер вернул неожиданный ответ');
-      }
-  
-      const data = await response.json();
-      
       if (!response.ok) {
-        throw new Error(data.message || 'Ошибка загрузки изображений');
+        throw new Error(await response.text());
       }
   
-      // Обрабатываем ответ сервера
-      let uploadedUrls = [];
-      if (data.urls) {
-        uploadedUrls = data.urls;
-      } else if (data.data && data.data.urls) {
-        uploadedUrls = data.data.urls;
-      } else if (Array.isArray(data.data)) {
-        uploadedUrls = data.data;
-      } else if (data.data) {
-        uploadedUrls = [data.data];
-      } else {
-        uploadedUrls = [data];
-      }
-  
-      // Преобразуем в массив URL
-      const newImages = uploadedUrls.map(item => {
-        if (typeof item === 'string') return item;
-        return item.url || item.path;
-      });
-  
-      setImages(prev => [...prev, ...newImages]);
+      const result = await response.json();
+      
+      // Ожидаем, что сервер возвращает массив объектов с path и originalname
+      const uploadedImages = result.data || result;
+      
+      setImages(prev => [
+        ...prev, 
+        ...uploadedImages.map(img => ({
+          path: img.path,
+          originalname: img.originalname || img.filename
+        }))
+      ]);
       
     } catch (error) {
-      console.error('Error uploading images:', error.message);
-      alert(error.message);
+      console.error('Error uploading images:', error);
+      alert('Ошибка загрузки изображений: ' + error.message);
     } finally {
       setUploading(false);
       setUploadProgress(0);
@@ -137,8 +118,21 @@ export default function MyObjects() {
 
   // Создание объявления
   const handleCreateListing = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
+      // Преобразуем images в нужный формат перед отправкой
+      const imagesToSend = images.map(img => {
+        if (typeof img === 'string') {
+          // Если это URL, извлекаем имя файла
+          const filename = img.split('/').pop();
+          return {
+            path: `/uploads/listings/${filename}`,
+            originalname: filename
+          };
+        }
+        return img; // Если уже объект, оставляем как есть
+      });
+  
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings`, {
         method: 'POST',
         headers: {
@@ -147,23 +141,24 @@ export default function MyObjects() {
         },
         body: JSON.stringify({
           ...formData,
-          images,
+          images: imagesToSend,
           createdBy: user.user._id,
           status: 'pending'
         })
-      })
-
-      if (!response.ok) throw new Error('Ошибка создания')
-
-      const data = await response.json()
-      setListings([...listings, data])
-      setIsModalOpen(false)
-      resetForm()
-      setImages([])
+      });
+  
+      if (!response.ok) throw new Error('Ошибка создания');
+  
+      const data = await response.json();
+      setListings([...listings, data]);
+      setIsModalOpen(false);
+      resetForm();
+      setImages([]);
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error:', error);
+      alert('Ошибка при создании объявления: ' + error.message);
     }
-  }
+  };
 
   // Сброс формы
   const resetForm = () => {
@@ -201,6 +196,7 @@ export default function MyObjects() {
   const filteredListings = listings.filter(listing => 
     activeFilter === 'all' || listing.status === activeFilter
   )
+console.log(listings);
 
   return (
     <div className={styles.container}>
@@ -259,14 +255,21 @@ export default function MyObjects() {
               
               {/* Превью изображений */}
               {listing.images?.length > 0 && (
-                <div className={styles.imagePreview}>
-                  <img 
-                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${listing.images[0].path}`} 
-                    alt={listing.title}
-                  />
-                </div>
-              )}
-              
+  <div className={styles.imagePreview}>
+    {console.log('Image path:', listing.images[0].path)} {/* Добавлен лог */}
+    {console.log('Full image URL:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${listing.images[0].path}`)} {/* Лог полного URL */}
+    <img 
+      src={`${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${listing.images[0].path}`} 
+      // src={'http://localhost:5000/uploads/listings/listing-d22a8f7f-ee6e-46e3-b151-9581b31cc54a.png'}
+      alt={listing.title}
+      onError={(e) => {
+        console.error('Image load error:', e.target.src); // Лог ошибки загрузки
+        // e.target.src = '/placeholder-image.jpg';
+      }}
+      onLoad={() => console.log('Image loaded successfully')} // Лог успешной загрузки
+    />
+  </div>
+)} 
               <p className={styles.description}>{listing.description}</p>
               
               <div className={styles.details}>
@@ -438,20 +441,33 @@ export default function MyObjects() {
                       </div>
                     )}
 
-                    <div className={styles.uploadedImages}>
-                      {images.map((img, index) => (
-                        <div key={index} className={styles.imageItem}>
-                          <img src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${img}`} alt={`Preview ${index}`} />
-                          <button 
-                            type="button"
-                            className={styles.removeImage}
-                            onClick={() => handleRemoveImage(index)}
-                          >
-                            <FiX size={16} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+<div className={styles.uploadedImages}>
+  {images.map((img, index) => {
+    // Проверяем тип - URL строка или объект изображения
+    const imgUrl = typeof img === 'string' 
+      ? img 
+      : `${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${img.path}`;
+    
+    return (
+      <div key={index} className={styles.imageItem}>
+        <img 
+          src={imgUrl} 
+          alt={`Preview ${index}`}
+          onError={(e) => {
+            // e.target.src = '/placeholder-image.jpg';
+          }}
+        />
+        <button 
+          type="button"
+          className={styles.removeImage}
+          onClick={() => handleRemoveImage(index)}
+        >
+          <FiX size={16} />
+        </button>
+      </div>
+    );
+  })}
+</div>
                   </div>
                 </div>
 
