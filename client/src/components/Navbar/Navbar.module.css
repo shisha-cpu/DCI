@@ -1,103 +1,153 @@
+/* Navbar.module.css */
 .navbar {
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
+  background-color: #2e7d32;
+margin-top: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
+.fullWidthContainer {
+  width: 100%;
+
+  background-color: #2e7d32;
+}
+
+.contentContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.mainMenu {
+
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+
+.menuItem {
+  position: relative;
+  padding: 20px 12px;
+}
+
+.menuLink {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 15px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 8px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menuIcon {
+  font-size: 12px;
+  opacity: 0.8;
+  transition: transform 0.2s ease;
+}
+
+.menuItem:hover .menuIcon {
+  transform: rotate(180deg);
+}
+
+.menuLink:hover {
+  color: #e8f5e9;
+}
+
+.menuItem:hover .menuLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #e8f5e9, #a5d6a7);
+  border-radius: 2px;
+}
+
+.submenu {
+  position: absolute;
+  left: 0;
+  top: calc(100% - 2px);
+  width: 280px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 0 0 12px 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  border-top: 2px solid #2e7d32;
+}
+
+.menuItem:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.submenuInner {
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.submenuLink {
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  gap: 8px;
+}
+
+.submenuIcon {
+  font-size: 12px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  color: #2e7d32;
+}
+
+.submenuLink:hover {
+  color: #2e7d32;
+  background-color: #f1f8e9;
+}
+
+.submenuLink:hover .submenuIcon {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+@media (max-width: 1024px) {
+  .contentContainer {
+    padding: 0 16px;
   }
   
   .mainMenu {
-    display: flex;
-    justify-content: space-between;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 4px;
   }
   
   .menuItem {
-    position: relative;
-    padding: 15px 10px;
+    padding: 16px 8px;
   }
   
   .menuLink {
-    color: #333;
-    font-weight: 500;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s ease;
-    padding: 10px 0;
-    position: relative;
-  }
-  
-  .menuLink:hover {
-    color: #2e7d32;
-  }
-  
-  .menuItem:hover .menuLink::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #2e7d32;
+    font-size: 14px;
   }
   
   .submenu {
-    position: absolute;
-    left: 0;
-    top: 100%;
-    width: 250px;
-    background: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 0 0 5px 5px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    z-index: 100;
+    width: 240px;
   }
-  
-  .menuItem:hover .submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-  
-  .submenuInner {
-    padding: 15px 0;
-  }
-  
-  .submenuLink {
-    display: block;
-    padding: 8px 20px;
-    color: #555;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-  
-  .submenuLink:hover {
-    color: #2e7d32;
-    background-color: #f5f5f5;
-  }
-  
-  @media (max-width: 992px) {
-    .mainMenu {
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
-    
-    .menuItem {
-      padding: 10px 5px;
-    }
-    
-    .menuLink {
-      font-size: 14px;
-    }
-  }
+}

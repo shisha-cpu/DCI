@@ -213,20 +213,36 @@ exports.deleteListing = async (req, res, next) => {
 
     // Delete associated files
     for (const image of listing.images) {
-      const filePath = path.join(__dirname, `../public${image.path}`);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      try {
+        // Удаляем физический файл изображения
+        const filePath = path.join(__dirname, '..', 'uploads', 'listings', image.filename);
+        
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          console.log(`Deleted file: ${filePath}`);
+        } else {
+          console.log(`File not found: ${filePath}`);
+        }
+
+        // Удаляем запись о файле из базы данных
+        await File.findByIdAndDelete(image._id);
+        console.log(`Deleted file record from DB: ${image._id}`);
+      } catch (fileError) {
+        console.error(`Error deleting file ${image.filename}:`, fileError);
+        // Продолжаем удаление, даже если возникла ошибка с одним файлом
       }
-      await File.findByIdAndDelete(image._id);
     }
 
-    await listing.remove();
+    // Удаляем само объявление
+    await Listing.deleteOne({ _id: req.params.id });
+    console.log(`Deleted listing: ${req.params.id}`);
 
     res.status(200).json({
       success: true,
       data: {}
     });
   } catch (err) {
+    console.error('Error in deleteListing:', err);
     next(err);
   }
 };

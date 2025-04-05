@@ -71,35 +71,41 @@ export default function Navbar() {
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.container}>
-        <ul className={styles.mainMenu}>
-          {Object.keys(categories).map((category) => (
-            <li 
-              key={category}
-              className={styles.menuItem}
-              onMouseEnter={() => setHoveredCategory(category)}
-              onMouseLeave={() => setHoveredCategory(null)}
-            >
-              <span className={styles.menuLink}>{category}</span>
-              
-              {hoveredCategory === category && (
-                <div className={styles.submenu}>
-                  <div className={styles.submenuInner}>
-                    {categories[category].map((subcategory) => (
-                      <a 
-                        key={subcategory} 
-                        href="#"
-                        className={styles.submenuLink}
-                      >
-                        {subcategory}
-                      </a>
-                    ))}
+      <div className={styles.fullWidthContainer}>
+        <div className={styles.contentContainer}>
+          <ul className={styles.mainMenu}>
+            {Object.keys(categories).map((category) => (
+              <li 
+                key={category}
+                className={styles.menuItem}
+                onMouseEnter={() => setHoveredCategory(category)}
+                onMouseLeave={() => setHoveredCategory(null)}
+              >
+                <span className={styles.menuLink}>
+                  {category}
+                  <span className={styles.menuIcon}>⌄</span>
+                </span>
+                
+                {hoveredCategory === category && (
+                  <div className={styles.submenu}>
+                    <div className={styles.submenuInner}>
+                      {categories[category].map((subcategory) => (
+                        <a 
+                          key={subcategory} 
+                          href="#"
+                          className={styles.submenuLink}
+                        >
+                          <span className={styles.submenuIcon}>→</span>
+                          {subcategory}
+                        </a>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </nav>
   )

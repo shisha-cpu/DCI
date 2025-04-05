@@ -28,7 +28,7 @@ export default function Footer() {
               <li className={styles.contactItem}>Москва, ул. Инвестиционная, 1</li>
             </ul>
           </div>
-          <div>
+          {/* <div>
             <h4 className={styles.sectionTitle}>Подписка</h4>
             <p className={styles.subscribeText}>
               Подпишитесь на новости и актуальные предложения
@@ -44,7 +44,7 @@ export default function Footer() {
                 OK
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
         <div className={styles.copyright}>
           <p>© {new Date().getFullYear()} GreenInvest. Все права защищены.</p>

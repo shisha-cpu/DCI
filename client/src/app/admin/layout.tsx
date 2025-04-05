@@ -65,13 +65,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               onClick={() => setActiveSection('content')}
               className={`${styles.navButton} ${activeSection === 'content' ? styles.active : ''}`}
             >
-              Контент
+              Обьявления
             </button>
             <button 
               onClick={() => setActiveSection('settings')}
               className={`${styles.navButton} ${activeSection === 'settings' ? styles.active : ''}`}
             >
-              Настройки
+              Заявки
             </button>
           </nav>
         </aside>

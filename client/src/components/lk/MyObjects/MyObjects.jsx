@@ -197,7 +197,32 @@ export default function MyObjects() {
     activeFilter === 'all' || listing.status === activeFilter
   )
 console.log(listings);
+const handleDeleteListing = async (listingId) => {
+  if (!window.confirm('Вы уверены, что хотите удалить это объявление?')) {
+    return;
+  }
 
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings/${listingId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${user.token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка удаления объявления');
+    }
+
+    // Обновляем список объявлений после удаления
+    setListings(prev => prev.filter(listing => listing._id !== listingId));
+    
+    alert('Объявление успешно удалено');
+  } catch (error) {
+    console.error('Error deleting listing:', error);
+    alert('Ошибка при удалении объявления: ' + error.message);
+  }
+};
   return (
     <div className={styles.container}>
       {/* Хедер */}

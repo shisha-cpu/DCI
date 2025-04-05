@@ -1,21 +1,54 @@
 .filterContainer {
-  background-color: #f8fafc;
-  padding: 2rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
+  padding: 3rem 0;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.filterContainer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.05) 0%, transparent 70%);
+  z-index: 0;
 }
 
 .filterContent {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.headerWrapper {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .headerTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 2rem;
-  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.titleGradient {
+  background: linear-gradient(90deg, #166534 0%, #22c55e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.headerSubtitle {
+  font-size: 1.125rem;
+  color: #64748b;
+  font-weight: 400;
 }
 
 .categories {
@@ -23,45 +56,82 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .categoryButton {
+  position: relative;
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  padding: 0.75rem 1.75rem;
   font-size: 1rem;
   font-weight: 500;
   color: #334155;
   cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  z-index: 1;
 }
 
 .categoryButton:hover {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  color: #166534;
+}
+
+.buttonHoverEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  z-index: -1;
+}
+
+.categoryButton:hover .buttonHoverEffect {
+  transform: translateX(0);
 }
 
 .categoryButtonActive {
   background-color: #166534;
   color: white;
   border-color: #166534;
+  box-shadow: 0 4px 15px rgba(22, 101, 52, 0.2);
+}
+
+.categoryButtonActive:hover {
+  color: white;
 }
 
 .filterForm {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.inputsContainer {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 700px;
 }
 
 .filterGroup {
   display: flex;
   flex-direction: column;
-  min-width: 200px;
+  flex: 1;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.filterGroup.focused {
+  transform: translateY(-3px);
 }
 
 .filterLabel {
@@ -69,15 +139,24 @@
   color: #64748b;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  padding-left: 0.5rem;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .filterInput {
-  padding: 0.75rem;
+  padding: 1rem 1.5rem 1rem 1rem;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   background: white;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
 }
 
 .filterInput:focus {
@@ -86,34 +165,69 @@
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
 
+.filterInput::placeholder {
+  color: #94a3b8;
+}
+
+.currency {
+  position: absolute;
+  right: 1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
 .filterButton {
-  background-color: #166534;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(90deg, #166534 0%, #22c55e 100%);
   color: white;
-  padding: 0.75rem 2rem;
-  border-radius: 6px;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  height: fit-content;
-  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(22, 101, 52, 0.3);
 }
 
 .filterButton:hover {
-  background-color: #15803d;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 101, 52, 0.4);
 }
 
+.buttonArrow {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.filterButton:hover .buttonArrow {
+  transform: translateX(3px);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.filterContent {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
   .headerTitle {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
   }
   
-  .filterForm {
+  .headerSubtitle {
+    font-size: 1rem;
+  }
+  
+  .inputsContainer {
     flex-direction: column;
-    align-items: stretch;
+    gap: 1rem;
   }
   
   .filterGroup {
@@ -122,6 +236,25 @@
   
   .filterButton {
     width: 100%;
-    padding: 0.75rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterContainer {
+    padding: 2rem 0;
+  }
+  
+  .headerTitle {
+    font-size: 1.5rem;
+  }
+  
+  .categories {
+    gap: 0.5rem;
+  }
+  
+  .categoryButton {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
 }

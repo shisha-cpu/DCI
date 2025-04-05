@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import styles from './lk.module.css'
 import AuthForm from '../../components/lk/AuthForm/AuthForm'
 import MyObjects from '../../components/lk/MyObjects/MyObjects'
@@ -17,12 +17,27 @@ export default function LKPage() {
   const user = useSelector(state => state.user.user)
   const dispatch = useDispatch()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('objects')
-  const pathname = usePathname()
+
+  // Получаем параметр tab из URL при загрузке
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab && ['objects', 'favorites', 'compare', 'notifications', 'profile'].includes(tab)) {
+      setActiveTab(tab)
+    }
+  }, [searchParams])
 
   const handleLogout = () => {
     dispatch(logout())
-    router.push('/') // Перенаправляем на главную после выхода
+    router.push('/')
+  }
+
+  // Функция для изменения активного таба
+  const handleTabChange = (tab) => {
+    setActiveTab(tab)
+    // Обновляем URL без перезагрузки страницы
+    router.push(`/lk?tab=${tab}`, { scroll: false })
   }
 
   const renderContent = () => {
@@ -49,47 +64,45 @@ export default function LKPage() {
           <>
             <button
               className={`${styles.sidebarLink} ${activeTab === 'objects' ? styles.sidebarLinkActive : ''}`}
-              onClick={() => setActiveTab('objects')}
+              onClick={() => handleTabChange('objects')}
             >
               Мои объекты
             </button>
             
             <button
               className={`${styles.sidebarLink} ${activeTab === 'favorites' ? styles.sidebarLinkActive : ''}`}
-              onClick={() => setActiveTab('favorites')}
+              onClick={() => handleTabChange('favorites')}
             >
               Избранное
             </button>
             
             <button
               className={`${styles.sidebarLink} ${activeTab === 'compare' ? styles.sidebarLinkActive : ''}`}
-              onClick={() => setActiveTab('compare')}
+              onClick={() => handleTabChange('compare')}
             >
               Сравнение
             </button>
             
             <button
               className={`${styles.sidebarLink} ${activeTab === 'notifications' ? styles.sidebarLinkActive : ''}`}
-              onClick={() => setActiveTab('notifications')}
+              onClick={() => handleTabChange('notifications')}
             >
               Уведомления
             </button>
             
             <button
               className={`${styles.sidebarLink} ${activeTab === 'profile' ? styles.sidebarLinkActive : ''}`}
-              onClick={() => setActiveTab('profile')}
+              onClick={() => handleTabChange('profile')}
             >
               Мой профиль
             </button>
+            
             <button
-                className={styles.logoutButton}
-                onClick={handleLogout}
-              >
-                Выйти
-              </button>
-
-        
-  
+              className={styles.logoutButton}
+              onClick={handleLogout}
+            >
+              Выйти
+            </button>
           </>
         ) : (
           <button
