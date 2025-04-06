@@ -33,7 +33,7 @@ export default function FilterSection({ onCategoryChange }) {
       <div className={styles.filterContent}>
         <div className={styles.headerWrapper}>
           <h1 className={styles.headerTitle}>
-            <span className={styles.titleGradient}>GreenInvest</span> в Санкт-Петербурге
+            <span className={styles.titleGradient}>GreenInvest</span> | Работаем по всей России
           </h1>
           <p className={styles.headerSubtitle}>Инвестиции в бизнес для каждого</p>
         </div>
