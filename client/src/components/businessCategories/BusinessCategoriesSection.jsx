@@ -8,37 +8,65 @@ export default function BusinessCategoriesSection({ activeCategory }) {
   const [categories, setCategories] = useState([])
 
   const allCategories = {
-    'Готовый бизнес': [
-      { name: 'Ресторанный бизнес', count: 320 },
-      { name: 'Магазины и торговля', count: 192 },
-      { name: 'Гостиничный бизнес', count: 181 },
-      { name: 'Сфера красоты', count: 164 },
-      { name: 'Производство', count: 123 },
-      { name: 'Интернет магазины', count: 99 }
+    'Коммерческая недвижимость': [
+      { name: 'Торговый центр (здание)' },
+      { name: 'Торговое помещение / магазин' },
+      { name: 'Рынок / оптовая база' },
+      { name: 'Офисный центр (здание)' },
+      { name: 'Офисное помещение' },
+      { name: 'Складской комплекс' },
+      { name: 'Складское помещение' },
+      { name: 'Гостиница' },
+      { name: 'Хостел' },
+      { name: 'Спортивно-оздоровительный комплекс' },
+      { name: 'Автосервис' },
+      { name: 'Автосалон' },
+      { name: 'АЗС' },
+      { name: 'Помещение свободного назначения' },
+      { name: 'Здание свободного назначения' }
     ],
-    'Франшизы': [
-      { name: 'Франшизы ресторанов', count: 120 },
-      { name: 'Франшизы магазинов', count: 95 },
-      { name: 'Франшизы услуг', count: 78 },
-      { name: 'Производственные франшизы', count: 45 }
+    'Жилая недвижимость': [
+      { name: 'Квартира' },
+      { name: 'Комната' },
+      { name: 'Частный дом / коттедж' },
+      { name: 'Таунхаус' },
+      { name: 'Многоквартирный жилой комплекс' }
     ],
-    'Инвестиции': [
-      { name: 'Стартапы', count: 65 },
-      { name: 'Недвижимость', count: 89 },
-      { name: 'Акции компаний', count: 42 }
+    'Земельные участки': [
+      { name: 'Земля под ИЖС' },
+      { name: 'Земельный участок под коммерческую застройку' }
     ],
-    'Недвижимость': [
-      { name: 'Коммерческая недвижимость', count: 156 },
-      { name: 'Жилая недвижимость', count: 231 },
-      { name: 'Земельные участки', count: 87 }
+    'Производство': [
+      { name: 'Деревоперерабатывающее предприятие' },
+      { name: 'Металлообрабатывающее предприятие' },
+      { name: 'Пищевое производство' },
+      { name: 'Производство строительных материалов' },
+      { name: 'Текстильное производство' },
+      { name: 'Химическое производство' }
     ],
-    'Бизнес-идея': [
-      { name: 'Инновационные идеи', count: 34 },
-      { name: 'Проверенные модели', count: 56 }
+    'Сельхоз активы': [
+      { name: 'Птицефабрика' },
+      { name: 'Животноводческий комплекс' },
+      { name: 'Тепличный комплекс' },
+      { name: 'Зерновое хозяйство' },
+      { name: 'Элеватор' },
+      { name: 'Сад / виноградник' }
     ],
-    'Бизнес-планы': [
-      { name: 'Готовые бизнес-планы', count: 42 },
-      { name: 'Индивидуальные разработки', count: 28 }
+    'Рестораны и развлечения': [
+      { name: 'Ресторан/бар/кафе' },
+      { name: 'Развлекательный комплекс' }
+    ],
+    'Спецтехника и транспорт': [
+      { name: 'Грузовики и прицепы' },
+      { name: 'Строительная техника' },
+      { name: 'Сельхоз техника' },
+      { name: 'Автобусы' },
+      { name: 'Водный транспорт' }
+    ],
+    'Финансовые активы': [
+      { name: 'Ценные бумаги' },
+      { name: 'Дебиторская задолженность' },
+      { name: 'Нематериальные активы' }
     ]
   }
 
@@ -51,26 +79,27 @@ export default function BusinessCategoriesSection({ activeCategory }) {
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.title}>
-            <span className={styles.titleHighlight}>Продажа {activeCategory.toLowerCase()}</span> 
+            <span className={styles.titleHighlight}>
+              Продажа {activeCategory.toLowerCase()}
+            </span>
           </h2>
           <p className={styles.subtitle}>Выберите интересующую вас категорию</p>
         </div>
 
         <div className={styles.categoriesGrid}>
           {categories.map((category, index) => (
-            <Link 
-              href={`/listings?category=${encodeURIComponent(category.name)}`} 
-              key={index} 
+            <Link
+            href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+              key={index}
               className={styles.categoryCard}
             >
               <div className={styles.categoryContent}>
                 <h3 className={styles.categoryName}>{category.name}</h3>
-                {/* <div className={styles.categoryCount}>{category.count}+</div> */}
               </div>
               <div className={styles.categoryHover}>
                 <span>Смотреть предложения</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </Link>
@@ -85,7 +114,7 @@ export default function BusinessCategoriesSection({ activeCategory }) {
           <Link href="/lk" className={styles.sellButton}>
             Начать продажу
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>

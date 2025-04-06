@@ -1,7 +1,7 @@
 /* Navbar.module.css */
 .navbar {
   background-color: #2e7d32;
-margin-top: 10px;
+
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   position: relative;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

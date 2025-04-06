@@ -109,3 +109,60 @@
     color: #86efac; /* green-300 */
     font-size: 0.875rem;
   }
+  .ratingContainer {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ratingHeader {
+    color: #333;
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+  }
+  
+  .ratingBody {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .ratingValue {
+    display: flex;
+    align-items: center;
+  }
+  
+  .ratingNumber {
+    font-size: 28px;
+    font-weight: bold;
+    color: #28a745;
+    margin-right: 10px;
+  }
+  
+  .starsContainer {
+    display: flex;
+  }
+  
+  .star {
+    color: #ffc107;
+    font-size: 20px;
+    margin-right: 2px;
+  }
+  
+  .emptyStar {
+    color: #ddd;
+  }
+  
+  .reviewsCount {
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .reviewsCount span {
+    font-weight: bold;
+    color: #333;
+  }

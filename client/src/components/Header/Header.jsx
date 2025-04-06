@@ -21,7 +21,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          GreenInvest
+          DCI CLUB
         </Link>
 
         <nav className={styles.nav}>
@@ -80,7 +80,9 @@ export default function Header() {
             {user && user.name ? user.name : 'Вход'}
           </Link>
         </nav>
-
+        <div className={styles.container}>
+      <button className={styles.button}>Оставить заявку</button>
+    </div>
         {/* Модальное окно остается без изменений */}
         {isModalOpen && (
           <div className={styles.modalOverlay}>

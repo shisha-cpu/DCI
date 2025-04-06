@@ -1,7 +1,7 @@
 /* app.module.css */
 
 .container {
-  max-width: 1200px;
+
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -14,10 +14,13 @@
 }
 
 .categorySection {
-  background-color: #f8fafc;
+  margin:  0 auto;
+  max-width: 1200px;
+
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .categoryHeader {
@@ -134,7 +137,7 @@
 
 .listingButton {
   display: block;
-  width: 100%;
+  width: 92%;
   background-color: #166534;
   color: white;
   text-align: center;
@@ -150,6 +153,8 @@
 }
 
 .benefitsSection {
+  max-width: 1200px;
+  margin:  0 auto;
   background-color: #166534;
   color: white;
   border-radius: 0.75rem;
@@ -203,4 +208,99 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+.ratingContainer {
+  font-family: Arial, sans-serif;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ratingHeader {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.ratingBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ratingValue {
+  display: flex;
+  align-items: center;
+}
+
+.ratingNumber {
+  font-size: 28px;
+  font-weight: bold;
+  color: #28a745;
+  margin-right: 10px;
+}
+
+.starsContainer {
+  display: flex;
+}
+
+.star {
+  color: #ffc107;
+  font-size: 20px;
+  margin-right: 2px;
+}
+
+.emptyStar {
+  color: #ddd;
+}
+
+.reviewsCount {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.reviewsCount span {
+  font-weight: bold;
+  color: #333;
+}
+.listingActions {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionButton:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.favoriteIcon {
+  color: #64748b;
+}
+
+.favoriteIconActive {
+  color: #ef4444;
+}
+
+.compareIcon {
+  color: #166534;
 }

@@ -7,7 +7,7 @@ export default function Footer() {
       <div className={styles.container}>
         <div className={styles.grid}>
           <div>
-            <h3 className={styles.logo}>GreenInvest</h3>
+            <h3 className={styles.logo}>DCI CLUB</h3>
             <p className={styles.description}>
               Платформа для инвестиций в недвижимость и бизнес
             </p>
@@ -28,6 +28,29 @@ export default function Footer() {
               <li className={styles.contactItem}>Москва, ул. Инвестиционная, 1</li>
             </ul>
           </div>
+          <div className={styles.ratingContainer}>
+      <div className={styles.ratingHeader}>
+        Оценка  компании <strong>DCI CLUB</strong><br />
+
+      </div>
+      
+      <div className={styles.ratingBody}>
+        <div className={styles.ratingValue}>
+          <span className={styles.ratingNumber}>4.6</span>
+          <div className={styles.starsContainer}>
+            <span className={styles.star}>★</span>
+            <span className={styles.star}>★</span>
+            <span className={styles.star}>★</span>
+            <span className={styles.star}>★</span>
+            <span className={`${styles.star} ${styles.emptyStar}`}>★</span>
+          </div>
+        </div>
+        
+        <div className={styles.reviewsCount}>
+          Оценили: <span>1</span>
+        </div>
+      </div>
+    </div>
           {/* <div>
             <h4 className={styles.sectionTitle}>Подписка</h4>
             <p className={styles.subscribeText}>
@@ -47,7 +70,7 @@ export default function Footer() {
           </div> */}
         </div>
         <div className={styles.copyright}>
-          <p>© {new Date().getFullYear()} GreenInvest. Все права защищены.</p>
+          <p>© {new Date().getFullYear()} DCI CLUB. Все права защищены.</p>
         </div>
       </div>
     </footer>
