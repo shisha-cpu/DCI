@@ -190,9 +190,9 @@ export default function AuthForm() {
                 >
                   <option value="investor">Инвестор</option>
                   <option value="partner">Партнер</option>
-                  <option value="realtor">Риелтор</option>
-                  <option value="banker">Банковский брокер</option>
-                  <option value="developer">Застройщик</option>
+                  <option value="realtor">Продавец</option>
+                  {/* <option value="banker">Банковский брокер</option>
+                  <option value="developer">Застройщик</option> */}
                 </select>
               </div>
             </>
