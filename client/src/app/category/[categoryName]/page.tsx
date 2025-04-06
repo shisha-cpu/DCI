@@ -2,7 +2,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import styles from '../../app.module.css'
+import styles from './app.module.css'
 import { FaRegHeart, FaHeart, FaBalanceScale } from 'react-icons/fa'
 import { useState } from 'react'
 import Link from 'next/link'
