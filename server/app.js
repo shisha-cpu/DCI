@@ -29,11 +29,7 @@ const limiter = rateLimit({
 });
 
 // Configure CORS properly
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
+app.use(cors());
 
 // Middleware
 app.use(helmet());
