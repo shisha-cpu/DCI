@@ -1,5 +1,5 @@
 const File = require('../models/File.model');
-const ErrorResponse = require('../utils/errorResponse');
+const ErrorResponse = require('../utils/ErrorResponse');
 const fs = require('fs');
 const path = require('path');
 
