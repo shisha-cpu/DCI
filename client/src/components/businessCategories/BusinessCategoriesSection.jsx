@@ -1,11 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import styles from './businessCategories.module.css'
-
+import { FiSearch, FiX } from 'react-icons/fi'
 export default function BusinessCategoriesSection({ activeCategory }) {
   const [categories, setCategories] = useState([])
+  const [isMobile, setIsMobile] = useState(false)
+  const [visibleCategories, setVisibleCategories] = useState(12)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const allCategories = {
     'Коммерческая недвижимость': [
@@ -69,11 +72,36 @@ export default function BusinessCategoriesSection({ activeCategory }) {
       { name: 'Нематериальные активы' }
     ]
   }
-
   useEffect(() => {
     setCategories(allCategories[activeCategory] || [])
+    
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile)
+    }
   }, [activeCategory])
 
+  const filteredCategories = useMemo(() => {
+    if (!searchQuery) return categories
+    return categories.filter(category => 
+      category.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [categories, searchQuery])
+
+  const handleShowMore = () => {
+    setVisibleCategories(prev => prev + 12)
+  }
+
+  const clearSearch = () => {
+    setSearchQuery('')
+  }
+ 
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -84,28 +112,61 @@ export default function BusinessCategoriesSection({ activeCategory }) {
             </span>
           </h2>
           <p className={styles.subtitle}>Выберите интересующую вас категорию</p>
+          
+          <div className={styles.searchContainer}>
+            <div className={styles.searchInputWrapper}>
+              <FiSearch className={styles.searchIcon} />
+              <input
+                type="text"
+                placeholder="Поиск по категориям..."
+                className={styles.searchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button onClick={clearSearch} className={styles.clearButton}>
+                  <FiX />
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className={styles.categoriesGrid}>
-          {categories.map((category, index) => (
-            <Link
-            href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
-              key={index}
-              className={styles.categoryCard}
+        <div className={styles.categoriesWrapper}>
+          {filteredCategories.length > 0 ? (
+            <div className={styles.categoriesColumns}>
+              {filteredCategories.slice(0, visibleCategories).map((category, index) => (
+                <Link
+                  href={{
+                    pathname: `/category/${activeCategory.toLowerCase().replace(/\s+/g, '-')}`,
+                    query: { 
+                      subcategory: category.name.toLowerCase().replace(/\s+/g, '-')
+                    }
+                  }}
+                  key={index}
+                  className={styles.categoryLink}
+                >
+                  {highlightMatch(category.name, searchQuery)}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.noResults}>
+              Ничего не найдено. Попробуйте изменить запрос.
+            </div>
+          )}
+        </div>
+
+        {visibleCategories < filteredCategories.length && (
+          <div className={styles.showMoreContainer}>
+            <button 
+              onClick={handleShowMore}
+              className={styles.showMoreButton}
             >
-              <div className={styles.categoryContent}>
-                <h3 className={styles.categoryName}>{category.name}</h3>
-              </div>
-              <div className={styles.categoryHover}>
-                <span>Смотреть предложения</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </Link>
-          ))}
-        </div>
-
+              Показать ещё
+            </button>
+          </div>
+        )}
         <div className={styles.sellBusiness}>
           <div className={styles.sellContent}>
             <h3 className={styles.sellTitle}>Продать бизнес</h3>
@@ -113,12 +174,27 @@ export default function BusinessCategoriesSection({ activeCategory }) {
           </div>
           <Link href="/lk" className={styles.sellButton}>
             Начать продажу
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className={styles.arrowIcon}>
               <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>
       </div>
     </section>
+  )
+}
+
+function highlightMatch(text, query) {
+  if (!query) return text
+  
+  const parts = text.split(new RegExp(`(${query})`, 'gi'))
+  return parts.map((part, i) => 
+    part.toLowerCase() === query.toLowerCase() ? (
+      <span key={i} className={styles.highlight}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
   )
 }

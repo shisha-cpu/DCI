@@ -1,7 +1,6 @@
 /* app.module.css */
 
 .container {
-
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -9,14 +8,15 @@
 .categoriesContainer {
   display: flex;
   flex-direction: column;
+  max-width: 100svw !important;
+  overflow: hidden;
   gap: 3rem;
   margin-bottom: 3rem;
 }
 
 .categorySection {
-  margin:  0 auto;
+  margin: 0 auto;
   max-width: 1200px;
-
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -51,17 +51,7 @@
   background-color: #15803d;
 }
 
-.listingsGrid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 1.5rem;
-}
 
-@media (min-width: 768px) {
-  .listingsGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
 .listingCard {
   background-color: white;
@@ -69,6 +59,8 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
+  scroll-snap-align: start;
+  flex: 0 0 auto;
 }
 
 .listingCard:hover {
@@ -154,7 +146,7 @@
 
 .benefitsSection {
   max-width: 1200px;
-  margin:  0 auto;
+  margin: 0 auto;
   background-color: #166534;
   color: white;
   border-radius: 0.75rem;
@@ -173,12 +165,6 @@
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
-}
-
-@media (min-width: 768px) {
-  .benefitsGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 .benefitCard {
@@ -210,63 +196,6 @@
   margin-bottom: 0.5rem;
 }
 
-.ratingContainer {
-  font-family: Arial, sans-serif;
-  max-width: 400px;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #f8f9fa;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.ratingHeader {
-  color: #333;
-  font-size: 16px;
-  line-height: 1.4;
-  margin-bottom: 15px;
-}
-
-.ratingBody {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.ratingValue {
-  display: flex;
-  align-items: center;
-}
-
-.ratingNumber {
-  font-size: 28px;
-  font-weight: bold;
-  color: #28a745;
-  margin-right: 10px;
-}
-
-.starsContainer {
-  display: flex;
-}
-
-.star {
-  color: #ffc107;
-  font-size: 20px;
-  margin-right: 2px;
-}
-
-.emptyStar {
-  color: #ddd;
-}
-
-.reviewsCount {
-  font-size: 14px;
-  color: #6c757d;
-}
-
-.reviewsCount span {
-  font-weight: bold;
-  color: #333;
-}
 .listingActions {
   position: absolute;
   top: 0.5rem;
@@ -304,3 +233,121 @@
 .compareIcon {
   color: #166534;
 }
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  .categoryTitle{
+    font-size: 20px;
+  }
+  .viewAllButton{
+    font-size: 12px;
+  }
+  .listingsGrid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+    gap: 1rem;
+    grid-template-columns: unset;
+  }
+
+  .listingCard {
+    min-width: 80vw;
+    max-width: 80vw;
+    margin-right: 1rem;
+  }
+
+  .listingImage {
+    height: 120px;
+  }
+
+  .listingContent {
+    padding: 1rem;
+  }
+
+  .listingTitle {
+    font-size: 1rem;
+  }
+
+  .listingDetails,
+  .listingLocation {
+    font-size: 0.75rem;
+  }
+
+  .listingPrice {
+    font-size: 1rem;
+  }
+
+  .listingButton {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .benefitsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* app.module.css */
+
+/* ... (остальные стили остаются без изменений) */
+
+.listingsGrid {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  cursor: grab;
+  will-change: transform;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.listingsGrid.grabbing {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.listingCard {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: 80vw;
+  transition: transform 0.2s;
+  pointer-events: auto;
+}
+
+/* Оптимизация для iOS */
+@supports (-webkit-touch-callout: none) {
+  .listingsGrid {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (min-width: 768px) {
+  .listingsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-x: visible;
+    scroll-snap-type: none;
+    gap: 1.5rem;
+    padding-bottom: 0;
+    cursor: default;
+    touch-action: auto;
+  }
+
+  .listingCard {
+    width: auto;
+  }
+}
+
+/* ... (остальные стили остаются без изменений) */

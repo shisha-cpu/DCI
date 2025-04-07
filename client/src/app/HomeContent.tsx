@@ -5,7 +5,7 @@ import styles from './app.module.css'
 import FilterSection from '../components/Filter/FilterSection'
 import BusinessCategoriesSection from '../components/businessCategories/BusinessCategoriesSection'
 import Navbar from '../components/Navbar/Navbar'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { FaRegHeart, FaHeart, FaBalanceScale } from 'react-icons/fa'
 
 export default function Home() {
@@ -72,7 +72,7 @@ export default function Home() {
       'Нематериальные активы'
     ]
   }
-
+  
   // Данные по категориям бизнеса
   const businessCategories = {
     'Коммерческая недвижимость': [
@@ -287,6 +287,7 @@ export default function Home() {
 
   const [activeCategory, setActiveCategory] = useState('Коммерческая недвижимость')
   const [favorites, setFavorites] = useState<number[]>([])
+  
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -294,6 +295,66 @@ export default function Home() {
     )
   }
 
+  useEffect(() => {
+    const handleTouchMove = (e: TouchEvent) => {
+      // Prevent scrolling when interacting with sliders
+      if ((e.target as HTMLElement).closest('.listingSlider')) {
+        e.preventDefault()
+      }
+    }
+
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    return () => {
+      document.removeEventListener('touchmove', handleTouchMove)
+    }
+  }, [])
+  const sliderRefs = useRef<{[key: string]: HTMLDivElement | null}>({})
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
+
+  const handleMouseDown = (e: React.MouseEvent, category: string) => {
+    const slider = sliderRefs.current[category]
+    if (!slider) return
+    
+    setIsDragging(true)
+    setStartX(e.pageX - slider.offsetLeft)
+    setScrollLeft(slider.scrollLeft)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent, category: string) => {
+    if (!isDragging) return
+    const slider = sliderRefs.current[category]
+    if (!slider) return
+    
+    e.preventDefault()
+    const x = e.pageX - slider.offsetLeft
+    const walk = (x - startX) * 2
+    slider.scrollLeft = scrollLeft - walk
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent, category: string) => {
+    const slider = sliderRefs.current[category]
+    if (!slider) return
+    
+    const touch = e.touches[0]
+    setStartX(touch.pageX - slider.offsetLeft)
+    setScrollLeft(slider.scrollLeft)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent, category: string) => {
+    const slider = sliderRefs.current[category]
+    if (!slider) return
+    
+    const touch = e.touches[0]
+    const x = touch.pageX - slider.offsetLeft
+    const walk = (x - startX) * 2
+    slider.scrollLeft = scrollLeft - walk
+  }
   return (
     <div className={styles.container}>
       <FilterSection 
@@ -306,7 +367,7 @@ export default function Home() {
       
       {/* Категории объявлений */}
       <div className={styles.categoriesContainer}>
-        {Object.entries(businessCategories).map(([category, items]) => (
+      {Object.entries(businessCategories).map(([category, items]) => (
           <section key={category} className={styles.categorySection}>
             <div className={styles.categoryHeader}>
               <h2 className={styles.categoryTitle}>{category}</h2>
@@ -318,7 +379,16 @@ export default function Home() {
               </Link>
             </div>
             
-            <div className={styles.listingsGrid}>
+            <div 
+              className={`${styles.listingsGrid} listingSlider`}
+              ref={el => sliderRefs.current[category] = el}
+              onMouseDown={(e) => handleMouseDown(e, category)}
+              onMouseMove={(e) => handleMouseMove(e, category)}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onTouchStart={(e) => handleTouchStart(e, category)}
+              onTouchMove={(e) => handleTouchMove(e, category)}
+            >
               {items.map(item => (
                 <div key={item.id} className={styles.listingCard}>
                   <div className={styles.listingImage}>
@@ -369,6 +439,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            
           </section>
         ))}
       </div>
@@ -405,8 +476,6 @@ export default function Home() {
             <p>Широкий выбор объектов для инвестиций</p>
           </div>
         </div>
-      </section>
-      <section>
       </section>
     </div>
   )

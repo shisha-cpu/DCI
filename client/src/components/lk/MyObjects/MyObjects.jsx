@@ -15,7 +15,71 @@ export default function MyObjects() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [images, setImages] = useState([])
   const fileInputRef = useRef(null)
-  
+  const [selectedCategory, setSelectedCategory] = useState('');
+const [selectedSubcategory, setSelectedSubcategory] = useState('');
+
+const allCategories = {
+  'Коммерческая недвижимость': [
+    { name: 'Торговый центр (здание)' },
+    { name: 'Торговое помещение / магазин' },
+    { name: 'Рынок / оптовая база' },
+    { name: 'Офисный центр (здание)' },
+    { name: 'Офисное помещение' },
+    { name: 'Складской комплекс' },
+    { name: 'Складское помещение' },
+    { name: 'Гостиница' },
+    { name: 'Хостел' },
+    { name: 'Спортивно-оздоровительный комплекс' },
+    { name: 'Автосервис' },
+    { name: 'Автосалон' },
+    { name: 'АЗС' },
+    { name: 'Помещение свободного назначения' },
+    { name: 'Здание свободного назначения' }
+  ],
+  'Жилая недвижимость': [
+    { name: 'Квартира' },
+    { name: 'Комната' },
+    { name: 'Частный дом / коттедж' },
+    { name: 'Таунхаус' },
+    { name: 'Многоквартирный жилой комплекс' }
+  ],
+  'Земельные участки': [
+    { name: 'Земля под ИЖС' },
+    { name: 'Земельный участок под коммерческую застройку' }
+  ],
+  'Производство': [
+    { name: 'Деревоперерабатывающее предприятие' },
+    { name: 'Металлообрабатывающее предприятие' },
+    { name: 'Пищевое производство' },
+    { name: 'Производство строительных материалов' },
+    { name: 'Текстильное производство' },
+    { name: 'Химическое производство' }
+  ],
+  'Сельхоз активы': [
+    { name: 'Птицефабрика' },
+    { name: 'Животноводческий комплекс' },
+    { name: 'Тепличный комплекс' },
+    { name: 'Зерновое хозяйство' },
+    { name: 'Элеватор' },
+    { name: 'Сад / виноградник' }
+  ],
+  'Рестораны и развлечения': [
+    { name: 'Ресторан/бар/кафе' },
+    { name: 'Развлекательный комплекс' }
+  ],
+  'Спецтехника и транспорт': [
+    { name: 'Грузовики и прицепы' },
+    { name: 'Строительная техника' },
+    { name: 'Сельхоз техника' },
+    { name: 'Автобусы' },
+    { name: 'Водный транспорт' }
+  ],
+  'Финансовые активы': [
+    { name: 'Ценные бумаги' },
+    { name: 'Дебиторская задолженность' },
+    { name: 'Нематериальные активы' }
+  ]
+}
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -63,6 +127,7 @@ export default function MyObjects() {
 
     fetchUserListings()
   }, [user])
+console.log(listings);
 
   // Обработка загрузки файлов
   const handleFileChange = async (e) => {
@@ -133,7 +198,7 @@ export default function MyObjects() {
         return img; // Если уже объект, оставляем как есть
       });
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,6 +206,8 @@ export default function MyObjects() {
         },
         body: JSON.stringify({
           ...formData,
+          category: selectedCategory,
+          subcategory: selectedSubcategory,
           images: imagesToSend,
           createdBy: user.user._id,
           status: 'pending'
@@ -371,7 +438,7 @@ const handleDeleteListing = async (listingId) => {
                   />
                 </div>
 
-                <div className={styles.formGroup}>
+                {/* <div className={styles.formGroup}>
                   <label>Тип бизнеса *</label>
                   <div className={styles.selectWrapper}>
                     <select
@@ -386,19 +453,41 @@ const handleDeleteListing = async (listingId) => {
                     </select>
                     <FiChevronDown className={styles.selectArrow} />
                   </div>
-                </div>
+                </div> */}
 
                 <div className={styles.formGroup}>
-                  <label>Категория *</label>
-                  <input
-                    type="text"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    placeholder="Общепит"
-                    required
-                  />
-                </div>
+  <label>Категория *</label>
+  <select
+    name="category"
+    value={selectedCategory}
+    onChange={(e) => {
+      setSelectedCategory(e.target.value);
+      setSelectedSubcategory(''); // Сброс подкатегории при изменении категории
+    }}
+    required
+  >
+    <option value="">Выберите категорию</option>
+    {Object.keys(allCategories).map((category) => (
+      <option key={category} value={category}>{category}</option>
+    ))}
+  </select>
+</div>
+
+<div className={styles.formGroup}>
+  <label>Подкатегория *</label>
+  <select
+    name="subcategory"
+    value={selectedSubcategory}
+    onChange={(e) => setSelectedSubcategory(e.target.value)}
+    required
+    disabled={!selectedCategory} // Деактивировать, если категория не выбрана
+  >
+    <option value="">Выберите подкатегорию</option>
+    {selectedCategory && allCategories[selectedCategory].map((subcategory) => (
+      <option key={subcategory.name} value={subcategory.name}>{subcategory.name}</option>
+    ))}
+  </select>
+</div>
 
                 <div className={styles.formGroup}>
                   <label>Цена, ₽ *</label>

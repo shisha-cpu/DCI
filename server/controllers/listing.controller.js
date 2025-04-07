@@ -35,6 +35,7 @@ const processUploadedFiles = async (files, userId) => {
   return imageIds;
 };
 exports.uploadListingImages = async (req, res, next) => {
+  
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -55,6 +56,8 @@ exports.uploadListingImages = async (req, res, next) => {
       data: fileData
     });
   } catch (err) {
+    console.log(err);
+    
     next(err);
   }
 };

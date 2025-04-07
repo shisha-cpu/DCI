@@ -1,10 +1,11 @@
 'use client'
 
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import styles from './app.module.css'
 import { FaRegHeart, FaHeart, FaBalanceScale, FaSearch, FaTimes, FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+
 const businessCategories = {
   'Коммерческая недвижимость': [
     {
@@ -278,27 +279,22 @@ const propertyCategories = {
   'Нематериальные активы'
 ]
 }
-
 export default function CategoryPage() {
   const params = useParams()
-  const searchParams = useSearchParams()
   const categoryName = decodeURIComponent(params.categoryName as string)
-  const subcategoryParam = searchParams.get('subcategory') || ''
-  
+
   const [favorites, setFavorites] = useState<number[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [investmentFrom, setInvestmentFrom] = useState('')
   const [investmentTo, setInvestmentTo] = useState('')
   const [sortOption, setSortOption] = useState('default')
   const [sortDirection, setSortDirection] = useState<'asc'|'desc'>('asc')
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subcategoryParam)
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>('')
 
-  // Находим правильное название категории
   const actualCategoryName = Object.keys(businessCategories).find(
     key => key.toLowerCase().replace(/\s+/g, '-') === categoryName.toLowerCase()
   ) || 'Коммерческая недвижимость'
 
-  // Получаем подкатегории для текущей категории
   const subcategories = propertyCategories[actualCategoryName as keyof typeof propertyCategories] || []
 
   const toggleFavorite = (id: number) => {
@@ -307,11 +303,9 @@ export default function CategoryPage() {
     )
   }
 
-  // Фильтрация и сортировка объектов
   const filteredItems = useMemo(() => {
     let items = businessCategories[actualCategoryName as keyof typeof businessCategories] || []
     
-    // Фильтрация по поисковому запросу
     if (searchQuery) {
       items = items.filter(item => 
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -319,7 +313,6 @@ export default function CategoryPage() {
       )
     }
     
-    // Фильтрация по цене
     if (investmentFrom) {
       const from = parseInt(investmentFrom)
       items = items.filter(item => item.price >= from)
@@ -330,23 +323,19 @@ export default function CategoryPage() {
       items = items.filter(item => item.price <= to)
     }
     
-    // Фильтрация по подкатегории
     if (selectedSubcategory) {
-      const decodedSubcategory = decodeURIComponent(selectedSubcategory)
       items = items.filter(item => 
-        item.details.includes(decodedSubcategory) || 
-        item.title.includes(decodedSubcategory)
+        item.details.includes(selectedSubcategory) || 
+        item.title.includes(selectedSubcategory)
       )
     }
     
-    // Сортировка
     switch (sortOption) {
       case 'price':
         items.sort((a, b) => sortDirection === 'asc' ? a.price - b.price : b.price - a.price)
         break
       case 'popularity':
-        items.sort((a, b) => sortDirection === 'asc' ? 
-          (a.id - b.id) : (b.id - a.id))
+        items.sort((a, b) => sortDirection === 'asc' ? a.id - b.id : b.id - a.id)
         break
       case 'title':
         items.sort((a, b) => sortDirection === 'asc' ? 
@@ -376,7 +365,6 @@ export default function CategoryPage() {
     <div className={styles.filtersContainer}>
       <h1 className={styles.pageTitle}>Каталог {actualCategoryName.toLowerCase()}</h1>
       
-      {/* Фильтр по подкатегориям */}
       <div className={styles.subcategoryFilter}>
         <select 
           className={styles.select}
@@ -384,14 +372,11 @@ export default function CategoryPage() {
           onChange={(e) => setSelectedSubcategory(e.target.value)}
         >
           <option value="">Все подкатегории</option>
-          {subcategories.map(subcategory => {
-            const subcategorySlug = subcategory.toLowerCase().replace(/\s+/g, '-')
-            return (
-              <option key={subcategorySlug} value={subcategorySlug}>
-                {subcategory}
-              </option>
-            )
-          })}
+          {subcategories.map(subcategory => (
+            <option key={subcategory} value={subcategory}>
+              {subcategory}
+            </option>
+          ))}
         </select>
       </div>
 

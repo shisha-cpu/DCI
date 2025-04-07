@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import styles from './filter.module.css'
 
 export default function FilterSection({ onCategoryChange }) {
+  const router = useRouter()
   const [activeCategory, setActiveCategory] = useState('Коммерческая недвижимость')
   const [minInvestment, setMinInvestment] = useState('')
   const [maxInvestment, setMaxInvestment] = useState('')
@@ -30,7 +32,7 @@ export default function FilterSection({ onCategoryChange }) {
     'Рестораны и развлечения': 'https://aledo-pro.ru/images/projects/img_64155c9bdeebd1_76912318.webp',
     'Спецтехника и транспорт': 'https://avatars.mds.yandex.net/get-altay/11421909/2a0000019104e92ce3c977e0c26545ae66f8/orig',
     'Финансовые активы': 'https://avatars.mds.yandex.net/i?id=c35cbc86fdfca021af13b635d39eaddb_l-4400724-images-thumbs&n=13',
-    'Готовый бизнес': 'https://yandex-images.clstorage.net/u9HEE7417/c8c70dgi5/Rz7_IbOVXzhdk65KbGtKJtn06Z8eUp20Q2zV8dEGtnyvFvfRQrBpQv0MwYeA_xbWJFgDxyTs0GzY3IGpm5oA0AoHmizqlCYkXYf_ZkVbIhaZodnqEgeV0FNxscH4nx-pTtdWONdQ8KZRbYGqxat-rzwFrnd9LJTgYTnYbaevFQFvji_R71nKIFnHy6I4a2aeXaV1Z6IvRQ0X-JhcDGeL-XJDZuCzeKROyUk1-m2bK7c8QWY6tRDkWPUpXLFPB-khzw6zRbtR2lit2_dOWEPiioklFcMqw7XZc8DIgGyzh-3yZ86cPygwpt3ZpdLBowMbuN2KQjX8eLCpAfT5-_MZqduyL7F74aZAdaOL_gS37lLFgV2vMrdhXYtMUGCUw7dhQmu-mNscSM5NbaHenYOHc-BpBsq1lPyUUWlo9SeD-VXT0rd1h72mYD0_q5LEt9IihbVtw56raYXbRJAU4FdzjWb3rkjP7Eyu4TENBkHbT4u0NdbidXAMsE0R4OG3n2kB58bHLe8NRrBl53NegGt6uqmhfcNur-VZO0TUoKjXCylWE3rgE8yIzuVhVYLthyufrE2W6mmUZPzZKZwd4wupDdfqw6FrnYoUoSv3Gjw3WmJ1vRl7tk8VqTd0hFB09_MRDktO3P_41DrhydWqFZM_A2Q1itI9hIC8ZW0Qpe8TabFvxifRgxWK2HXnu0bcf-reFalF66rHHQ1_rFTYfF87ua43ZiSbfFi6JR2pjpUr9yMkQYqSIQQIVI0p3PH7g_ldT-p_xb-V8gipq0OqaFemosF17avCMxXBEwx0KKDPs4neSwowF6hQqrUlSZqBg__34FUyHvF01MhJUYBxA-MpPQd-d-HfBapMDZN3vuArZhYp_QXDlsMViRdc9LAQA3upfmO-oN-cMJK1GZH68ZdT10gZ-uI9fGBUFS1Q3U-z6T2r1sOxA7U6SDkHO3bcW-LWedE5c-qf8blzUOAMdPe4' // Default background
+    'Готовый бизнес': 'https://yandex-images.clstorage.net/u9HEE7417/c8c70dgi5/Rz7_IbOVXzhdk65KbGtKJtn06Z8eUp20Q2zV8dEGtnyvFvfRQrBpQv0MwYeA_xbWJFgDxyTs0GzY3IGpm5oA0AoHmizqlCYkXYf_ZkVbIhaZodnqEgeV0FNxscH4nx-pTtdWONdQ8KZRbYGqxat-rzwFrnd9LJTgYTnYbaevFQFvji_R71nKIFnHy6I4a2aeXaV1Z6IvRQ0X-JhcDGeL-XJDZuCzeKROyUk1-m2bK7c8QWY6tRDkWPUpXLFPB-khzw6zRbtR2lit2_dOWEPiioklFcMqw7XZc8DIgGyzh-3yZ86cPygwpt3ZpdLBowMbuN2KQjX8eLCpAfT5-_MZqduyL7F74aZAdaOL_gS37lLFgV2vMrdhXYtMUGCUw7dhQmu-mNscSM5NbaHenYOHc-BpBsq1lPyUUWlo9SeD-VXT0rd1h72mYD0_q5LEt9IihbVtw56raYXbRJAU4FdzjWb3rkjP7Eyu4TENBkHbT4u0NdbidXAMsE0R4OG3n2kB58bHLe8NRrBl53NegGt6uqmhfcNur-VZO0TUoKjXCylWE3rgE8yIzuVhVYLthyufrE2W6mmUZPzZKZwd4wupDdfqw6FrnYoUoSv3Gjw3WmJ1vRl7tk8VqTd0hFB09_MRDktO3P_41DrhydWqFZM_A2Q1itI9hIC8ZW0Qpe8TabFvxifRgxWK2HXnu0bcf-reFalF66rHHQ1_rFTYfF87ua43ZiSbfFi6JR2pjpUr9yMkQYqSIQQIVI0p3PH7g_ldT-p_xb-V8gipq0OqaFemosF17avCMxXBEwx0KKDPs4neSwowF6hQqrUlSZqBg__34FUyHvF01MhJUYBxA-MpPQd-d-HfBapMDZN3vuArZhYp_QXDlsMViRdc9LAQA3upfmO-oN-cMJK1GZH68ZdT10gZ-uI9fGBUFS1Q3U-z6T2r1sOxA7U6SDkHO3bcW-LWedE5c-qf8blzUOAMdPe4'
   }
 
   const handleCategoryChange = (category) => {
@@ -40,7 +42,26 @@ export default function FilterSection({ onCategoryChange }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log({ activeCategory, minInvestment, maxInvestment })
+    
+    // Формируем параметры для URL
+    const queryParams = new URLSearchParams()
+    
+    // Добавляем категорию (преобразуем в URL-формат)
+    const categorySlug = activeCategory.toLowerCase().replace(/\s+/g, '-')
+    queryParams.set('category', categorySlug)
+    
+    // Добавляем минимальную инвестицию, если она указана
+    if (minInvestment) {
+      queryParams.set('min', minInvestment)
+    }
+    
+    // Добавляем максимальную инвестицию, если она указана
+    if (maxInvestment) {
+      queryParams.set('max', maxInvestment)
+    }
+    
+    // Перенаправляем на страницу результатов с параметрами
+    router.push(`/results?${queryParams.toString()}`)
   }
 
   return (
@@ -54,7 +75,6 @@ export default function FilterSection({ onCategoryChange }) {
       }}
     >
       <div className={styles.filterContent}>
-        {/* Rest of your component remains the same */}
         <div className={styles.headerWrapper}>
           <h1 className={styles.headerTitle}>
             <span className={styles.titleGradient}>DCI CLUB</span> | Работаем по всей России

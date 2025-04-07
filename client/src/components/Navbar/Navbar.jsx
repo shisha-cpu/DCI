@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
