@@ -1,12 +1,13 @@
 'use client'
 
-import { useState , useEffect } from 'react'
+import { useState } from 'react'
+import Link from 'next/link'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
-  const [hoveredCategory, setHoveredCategory] = useState(null)
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
 
-  const categories = {
+  const categories: Record<string, string[]> = {
     'Коммерческая недвижимость': [
       'Торговый центр (здание)',
       'Торговое помещение / магазин',
@@ -69,13 +70,16 @@ export default function Navbar() {
     ]
   }
 
+  const formatSlug = (text: string) =>
+    encodeURIComponent(text.toLowerCase().replace(/\s+/g, '-'))
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.fullWidthContainer}>
         <div className={styles.contentContainer}>
           <ul className={styles.mainMenu}>
             {Object.keys(categories).map((category) => (
-              <li 
+              <li
                 key={category}
                 className={styles.menuItem}
                 onMouseEnter={() => setHoveredCategory(category)}
@@ -85,19 +89,19 @@ export default function Navbar() {
                   {category}
                   <span className={styles.menuIcon}>⌄</span>
                 </span>
-                
+
                 {hoveredCategory === category && (
                   <div className={styles.submenu}>
                     <div className={styles.submenuInner}>
                       {categories[category].map((subcategory) => (
-                        <a 
-                          key={subcategory} 
-                          href="#"
+                        <Link
+                          key={subcategory}
+                          href={`/category/${formatSlug(category)}?subcategory=${formatSlug(subcategory)}`}
                           className={styles.submenuLink}
                         >
                           <span className={styles.submenuIcon}>→</span>
                           {subcategory}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>

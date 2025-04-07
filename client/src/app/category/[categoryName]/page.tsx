@@ -3,7 +3,7 @@
 import { useParams, useSearchParams } from 'next/navigation'
 import styles from './app.module.css'
 import { FaRegHeart, FaHeart, FaBalanceScale, FaSearch, FaTimes, FaArrowUp, FaArrowDown } from 'react-icons/fa'
-import { useState, useMemo } from 'react'
+import { useState, useMemo , useEffect} from 'react'
 import Link from 'next/link'
 const businessCategories = {
   'Коммерческая недвижимость': [
@@ -278,17 +278,18 @@ const propertyCategories = {
   'Нематериальные активы'
 ]
 }
-
 export default function CategoryPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const categoryName = decodeURIComponent(params.categoryName as string)
   const subcategoryParam = searchParams.get('subcategory') || ''
+  const minPriceParam = searchParams.get('min') || ''
+  const maxPriceParam = searchParams.get('max') || ''
   
   const [favorites, setFavorites] = useState<number[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [investmentFrom, setInvestmentFrom] = useState('')
-  const [investmentTo, setInvestmentTo] = useState('')
+  const [investmentFrom, setInvestmentFrom] = useState(minPriceParam)
+  const [investmentTo, setInvestmentTo] = useState(maxPriceParam)
   const [sortOption, setSortOption] = useState('default')
   const [sortDirection, setSortDirection] = useState<'asc'|'desc'>('asc')
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subcategoryParam)
@@ -300,6 +301,16 @@ export default function CategoryPage() {
 
   // Получаем подкатегории для текущей категории
   const subcategories = propertyCategories[actualCategoryName as keyof typeof propertyCategories] || []
+
+  // Применяем параметры из URL при загрузке
+  useEffect(() => {
+    if (minPriceParam) {
+      setInvestmentFrom(minPriceParam)
+    }
+    if (maxPriceParam) {
+      setInvestmentTo(maxPriceParam)
+    }
+  }, [minPriceParam, maxPriceParam])
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -322,12 +333,16 @@ export default function CategoryPage() {
     // Фильтрация по цене
     if (investmentFrom) {
       const from = parseInt(investmentFrom)
-      items = items.filter(item => item.price >= from)
+      if (!isNaN(from)) {
+        items = items.filter(item => item.price >= from)
+      }
     }
     
     if (investmentTo) {
       const to = parseInt(investmentTo)
-      items = items.filter(item => item.price <= to)
+      if (!isNaN(to)) {
+        items = items.filter(item => item.price <= to)
+      }
     }
     
     // Фильтрация по подкатегории
@@ -467,6 +482,12 @@ export default function CategoryPage() {
         {selectedSubcategory && (
           <span className={styles.selectedSubcategory}>
             • Подкатегория: {selectedSubcategory}
+          </span>
+        )}
+        {(minPriceParam || maxPriceParam) && (
+          <span className={styles.selectedSubcategory}>
+            • Цена: {minPriceParam ? `от ${parseInt(minPriceParam).toLocaleString('ru-RU')} ₽` : ''}
+            {maxPriceParam ? ` до ${parseInt(maxPriceParam).toLocaleString('ru-RU')} ₽` : ''}
           </span>
         )}
       </div>

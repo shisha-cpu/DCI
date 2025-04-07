@@ -42,28 +42,23 @@ export default function FilterSection({ onCategoryChange }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
-    // Формируем параметры для URL
-    const queryParams = new URLSearchParams()
-    
-    // Добавляем категорию (преобразуем в URL-формат)
+  
+    // Преобразуем категорию в slug (например, "Коммерческая недвижимость" -> "коммерческая-недвижимость")
     const categorySlug = activeCategory.toLowerCase().replace(/\s+/g, '-')
-    queryParams.set('category', categorySlug)
-    
-    // Добавляем минимальную инвестицию, если она указана
+  
+    // Формируем параметры URL
+    const queryParams = new URLSearchParams()
     if (minInvestment) {
       queryParams.set('min', minInvestment)
     }
-    
-    // Добавляем максимальную инвестицию, если она указана
     if (maxInvestment) {
       queryParams.set('max', maxInvestment)
     }
-    
-    // Перенаправляем на страницу результатов с параметрами
-    router.push(`/results?${queryParams.toString()}`)
+  
+    // Перенаправляем на страницу с категорией и параметрами
+    router.push(`/category/${categorySlug}?${queryParams.toString()}`)
   }
-
+  
   return (
     <div 
       className={styles.filterContainer}

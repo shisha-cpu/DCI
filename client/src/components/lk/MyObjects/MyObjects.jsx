@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import styles from './MyObjects.module.css'
-import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown, FiImage, FiUpload } from 'react-icons/fi'
+import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown, FiImage, FiUpload, FiFile, FiDownload } from 'react-icons/fi'
 
 export default function MyObjects() {
   const [activeFilter, setActiveFilter] = useState('all')
@@ -12,74 +12,78 @@ export default function MyObjects() {
   const [listings, setListings] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [uploadType, setUploadType] = useState('images') // 'images' или 'documents'
   const [uploadProgress, setUploadProgress] = useState(0)
   const [images, setImages] = useState([])
-  const fileInputRef = useRef(null)
+  const [documents, setDocuments] = useState([])
+  const imageInputRef = useRef(null)
+  const documentInputRef = useRef(null)
   const [selectedCategory, setSelectedCategory] = useState('');
-const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
-const allCategories = {
-  'Коммерческая недвижимость': [
-    { name: 'Торговый центр (здание)' },
-    { name: 'Торговое помещение / магазин' },
-    { name: 'Рынок / оптовая база' },
-    { name: 'Офисный центр (здание)' },
-    { name: 'Офисное помещение' },
-    { name: 'Складской комплекс' },
-    { name: 'Складское помещение' },
-    { name: 'Гостиница' },
-    { name: 'Хостел' },
-    { name: 'Спортивно-оздоровительный комплекс' },
-    { name: 'Автосервис' },
-    { name: 'Автосалон' },
-    { name: 'АЗС' },
-    { name: 'Помещение свободного назначения' },
-    { name: 'Здание свободного назначения' }
-  ],
-  'Жилая недвижимость': [
-    { name: 'Квартира' },
-    { name: 'Комната' },
-    { name: 'Частный дом / коттедж' },
-    { name: 'Таунхаус' },
-    { name: 'Многоквартирный жилой комплекс' }
-  ],
-  'Земельные участки': [
-    { name: 'Земля под ИЖС' },
-    { name: 'Земельный участок под коммерческую застройку' }
-  ],
-  'Производство': [
-    { name: 'Деревоперерабатывающее предприятие' },
-    { name: 'Металлообрабатывающее предприятие' },
-    { name: 'Пищевое производство' },
-    { name: 'Производство строительных материалов' },
-    { name: 'Текстильное производство' },
-    { name: 'Химическое производство' }
-  ],
-  'Сельхоз активы': [
-    { name: 'Птицефабрика' },
-    { name: 'Животноводческий комплекс' },
-    { name: 'Тепличный комплекс' },
-    { name: 'Зерновое хозяйство' },
-    { name: 'Элеватор' },
-    { name: 'Сад / виноградник' }
-  ],
-  'Рестораны и развлечения': [
-    { name: 'Ресторан/бар/кафе' },
-    { name: 'Развлекательный комплекс' }
-  ],
-  'Спецтехника и транспорт': [
-    { name: 'Грузовики и прицепы' },
-    { name: 'Строительная техника' },
-    { name: 'Сельхоз техника' },
-    { name: 'Автобусы' },
-    { name: 'Водный транспорт' }
-  ],
-  'Финансовые активы': [
-    { name: 'Ценные бумаги' },
-    { name: 'Дебиторская задолженность' },
-    { name: 'Нематериальные активы' }
-  ]
-}
+  const allCategories = {
+    'Коммерческая недвижимость': [
+      { name: 'Торговый центр (здание)' },
+      { name: 'Торговое помещение / магазин' },
+      { name: 'Рынок / оптовая база' },
+      { name: 'Офисный центр (здание)' },
+      { name: 'Офисное помещение' },
+      { name: 'Складской комплекс' },
+      { name: 'Складское помещение' },
+      { name: 'Гостиница' },
+      { name: 'Хостел' },
+      { name: 'Спортивно-оздоровительный комплекс' },
+      { name: 'Автосервис' },
+      { name: 'Автосалон' },
+      { name: 'АЗС' },
+      { name: 'Помещение свободного назначения' },
+      { name: 'Здание свободного назначения' }
+    ],
+    'Жилая недвижимость': [
+      { name: 'Квартира' },
+      { name: 'Комната' },
+      { name: 'Частный дом / коттедж' },
+      { name: 'Таунхаус' },
+      { name: 'Многоквартирный жилой комплекс' }
+    ],
+    'Земельные участки': [
+      { name: 'Земля под ИЖС' },
+      { name: 'Земельный участок под коммерческую застройку' }
+    ],
+    'Производство': [
+      { name: 'Деревоперерабатывающее предприятие' },
+      { name: 'Металлообрабатывающее предприятие' },
+      { name: 'Пищевое производство' },
+      { name: 'Производство строительных материалов' },
+      { name: 'Текстильное производство' },
+      { name: 'Химическое производство' }
+    ],
+    'Сельхоз активы': [
+      { name: 'Птицефабрика' },
+      { name: 'Животноводческий комплекс' },
+      { name: 'Тепличный комплекс' },
+      { name: 'Зерновое хозяйство' },
+      { name: 'Элеватор' },
+      { name: 'Сад / виноградник' }
+    ],
+    'Рестораны и развлечения': [
+      { name: 'Ресторан/бар/кафе' },
+      { name: 'Развлекательный комплекс' }
+    ],
+    'Спецтехника и транспорт': [
+      { name: 'Грузовики и прицепы' },
+      { name: 'Строительная техника' },
+      { name: 'Сельхоз техника' },
+      { name: 'Автобусы' },
+      { name: 'Водный транспорт' }
+    ],
+    'Финансовые активы': [
+      { name: 'Ценные бумаги' },
+      { name: 'Дебиторская задолженность' },
+      { name: 'Нематериальные активы' }
+    ]
+  }
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -108,7 +112,6 @@ const allCategories = {
     { id: 'inactive', label: 'Не активно' }
   ]
 
-  // Загрузка объявлений пользователя
   useEffect(() => {
     const fetchUserListings = async () => {
       if (user?.user?._id) {
@@ -127,23 +130,35 @@ const allCategories = {
 
     fetchUserListings()
   }, [user])
-console.log(listings);
 
-  // Обработка загрузки файлов
-  const handleFileChange = async (e) => {
+  const getDocumentIcon = (mimetype) => {
+    if (mimetype.includes('pdf')) return '/icons/pdf-icon.png';
+    if (mimetype.includes('word') || mimetype.includes('msword') || mimetype.includes('document')) 
+      return '/icons/word-icon.png';
+    if (mimetype.includes('powerpoint') || mimetype.includes('presentation')) 
+      return '/icons/ppt-icon.png';
+    return '/icons/file-icon.png';
+  }
+
+  const handleFileChange = async (e, type) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
   
     setUploading(true);
+    setUploadType(type);
     setUploadProgress(0);
   
     const formData = new FormData();
+    const endpoint = type === 'images' 
+      ? '/listings/upload' 
+      : '/listings/upload-documents';
+    
     files.forEach(file => {
-      formData.append('images', file);
+      formData.append(type === 'images' ? 'images' : 'documents', file);
     });
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/upload`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -157,45 +172,70 @@ console.log(listings);
   
       const result = await response.json();
       
-      // Ожидаем, что сервер возвращает массив объектов с path и originalname
-      const uploadedImages = result.data || result;
-      
-      setImages(prev => [
-        ...prev, 
-        ...uploadedImages.map(img => ({
-          path: img.path,
-          originalname: img.originalname || img.filename
-        }))
-      ]);
+      if (type === 'images') {
+        const uploadedImages = result.data || result;
+        setImages(prev => [
+          ...prev, 
+          ...uploadedImages.map(img => ({
+            path: img.path,
+            originalname: img.originalname || img.filename,
+            mimetype: img.mimetype
+          }))
+        ]);
+      } else {
+        const uploadedDocs = result.data || result;
+        setDocuments(prev => [
+          ...prev,
+          ...uploadedDocs.map(doc => ({
+            path: doc.path,
+            originalname: doc.originalname || doc.filename,
+            mimetype: doc.mimetype
+          }))
+        ]);
+      }
       
     } catch (error) {
-      console.error('Error uploading images:', error);
-      alert('Ошибка загрузки изображений: ' + error.message);
+      console.error('Error uploading files:', error);
+      alert(`Ошибка загрузки ${type === 'images' ? 'изображений' : 'документов'}: ${error.message}`);
     } finally {
       setUploading(false);
       setUploadProgress(0);
     }
   };
-  // Удаление изображения
+
   const handleRemoveImage = (index) => {
     setImages(prev => prev.filter((_, i) => i !== index))
   }
 
-  // Создание объявления
+  const handleRemoveDocument = (index) => {
+    setDocuments(prev => prev.filter((_, i) => i !== index))
+  }
+
   const handleCreateListing = async (e) => {
     e.preventDefault();
     try {
-      // Преобразуем images в нужный формат перед отправкой
       const imagesToSend = images.map(img => {
         if (typeof img === 'string') {
-          // Если это URL, извлекаем имя файла
           const filename = img.split('/').pop();
           return {
             path: `/uploads/listings/${filename}`,
-            originalname: filename
+            originalname: filename,
+            mimetype: 'image/jpeg'
           };
         }
-        return img; // Если уже объект, оставляем как есть
+        return img;
+      });
+
+      const documentsToSend = documents.map(doc => {
+        if (typeof doc === 'string') {
+          const filename = doc.split('/').pop();
+          return {
+            path: `/uploads/listings/${filename}`,
+            originalname: filename,
+            mimetype: 'application/octet-stream'
+          };
+        }
+        return doc;
       });
   
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings`, {
@@ -209,6 +249,7 @@ console.log(listings);
           category: selectedCategory,
           subcategory: selectedSubcategory,
           images: imagesToSend,
+          documents: documentsToSend,
           createdBy: user.user._id,
           status: 'pending'
         })
@@ -221,13 +262,13 @@ console.log(listings);
       setIsModalOpen(false);
       resetForm();
       setImages([]);
+      setDocuments([]);
     } catch (error) {
       console.error('Error:', error);
       alert('Ошибка при создании объявления: ' + error.message);
     }
   };
 
-  // Сброс формы
   const resetForm = () => {
     setFormData({
       title: '',
@@ -263,36 +304,35 @@ console.log(listings);
   const filteredListings = listings.filter(listing => 
     activeFilter === 'all' || listing.status === activeFilter
   )
-console.log(listings);
-const handleDeleteListing = async (listingId) => {
-  if (!window.confirm('Вы уверены, что хотите удалить это объявление?')) {
-    return;
-  }
 
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings/${listingId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${user.token}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Ошибка удаления объявления');
+  const handleDeleteListing = async (listingId) => {
+    if (!window.confirm('Вы уверены, что хотите удалить это объявление?')) {
+      return;
     }
 
-    // Обновляем список объявлений после удаления
-    setListings(prev => prev.filter(listing => listing._id !== listingId));
-    
-    alert('Объявление успешно удалено');
-  } catch (error) {
-    console.error('Error deleting listing:', error);
-    alert('Ошибка при удалении объявления: ' + error.message);
-  }
-};
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings/${listingId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка удаления объявления');
+      }
+
+      setListings(prev => prev.filter(listing => listing._id !== listingId));
+      alert('Объявление успешно удалено');
+    } catch (error) {
+      console.error('Error deleting listing:', error);
+      alert('Ошибка при удалении объявления: ' + error.message);
+    }
+  };
+console.log(listings);
+
   return (
     <div className={styles.container}>
-      {/* Хедер */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Мои объекты</h1>
@@ -307,7 +347,6 @@ const handleDeleteListing = async (listingId) => {
         </button>
       </div>
 
-      {/* Фильтры */}
       <div className={styles.filters}>
         {filters.map(filter => (
           <button
@@ -320,7 +359,6 @@ const handleDeleteListing = async (listingId) => {
         ))}
       </div>
 
-      {/* Контент */}
       {isLoading ? (
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
@@ -345,23 +383,17 @@ const handleDeleteListing = async (listingId) => {
                 </div>
               </div>
               
-              {/* Превью изображений */}
               {listing.images?.length > 0 && (
-  <div className={styles.imagePreview}>
-    {console.log('Image path:', listing.images[0].path)} {/* Добавлен лог */}
-    {console.log('Full image URL:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${listing.images[0].path}`)} {/* Лог полного URL */}
-    <img 
-      src={`${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${listing.images[0].path}`} 
-      // src={'http://localhost:5000/uploads/listings/listing-d22a8f7f-ee6e-46e3-b151-9581b31cc54a.png'}
-      alt={listing.title}
-      onError={(e) => {
-        console.error('Image load error:', e.target.src); // Лог ошибки загрузки
-        // e.target.src = '/placeholder-image.jpg';
-      }}
-      onLoad={() => console.log('Image loaded successfully')} // Лог успешной загрузки
-    />
-  </div>
-)} 
+                <div className={styles.imagePreview}>
+                  <img 
+                    src={`${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${listing.images[0].path}`} 
+                    alt={listing.title}
+                    onError={(e) => {
+                      e.target.src = '/placeholder-image.jpg';
+                    }}
+                  />
+                </div>
+              )} 
               <p className={styles.description}>{listing.description}</p>
               
               <div className={styles.details}>
@@ -406,7 +438,6 @@ const handleDeleteListing = async (listingId) => {
         </div>
       )}
 
-      {/* Модальное окно */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -418,6 +449,7 @@ const handleDeleteListing = async (listingId) => {
                   setIsModalOpen(false)
                   resetForm()
                   setImages([])
+                  setDocuments([])
                 }}
               >
                 <FiX size={24} />
@@ -438,56 +470,39 @@ const handleDeleteListing = async (listingId) => {
                   />
                 </div>
 
-                {/* <div className={styles.formGroup}>
-                  <label>Тип бизнеса *</label>
-                  <div className={styles.selectWrapper}>
-                    <select
-                      name="type"
-                      value={formData.type}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="business">Готовый бизнес</option>
-                      <option value="franchise">Франшиза</option>
-                      <option value="commercial">Коммерческая недвижимость</option>
-                    </select>
-                    <FiChevronDown className={styles.selectArrow} />
-                  </div>
-                </div> */}
+                <div className={styles.formGroup}>
+                  <label>Категория *</label>
+                  <select
+                    name="category"
+                    value={selectedCategory}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                      setSelectedSubcategory('');
+                    }}
+                    required
+                  >
+                    <option value="">Выберите категорию</option>
+                    {Object.keys(allCategories).map((category) => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                </div>
 
                 <div className={styles.formGroup}>
-  <label>Категория *</label>
-  <select
-    name="category"
-    value={selectedCategory}
-    onChange={(e) => {
-      setSelectedCategory(e.target.value);
-      setSelectedSubcategory(''); // Сброс подкатегории при изменении категории
-    }}
-    required
-  >
-    <option value="">Выберите категорию</option>
-    {Object.keys(allCategories).map((category) => (
-      <option key={category} value={category}>{category}</option>
-    ))}
-  </select>
-</div>
-
-<div className={styles.formGroup}>
-  <label>Подкатегория *</label>
-  <select
-    name="subcategory"
-    value={selectedSubcategory}
-    onChange={(e) => setSelectedSubcategory(e.target.value)}
-    required
-    disabled={!selectedCategory} // Деактивировать, если категория не выбрана
-  >
-    <option value="">Выберите подкатегорию</option>
-    {selectedCategory && allCategories[selectedCategory].map((subcategory) => (
-      <option key={subcategory.name} value={subcategory.name}>{subcategory.name}</option>
-    ))}
-  </select>
-</div>
+                  <label>Подкатегория *</label>
+                  <select
+                    name="subcategory"
+                    value={selectedSubcategory}
+                    onChange={(e) => setSelectedSubcategory(e.target.value)}
+                    required
+                    disabled={!selectedCategory}
+                  >
+                    <option value="">Выберите подкатегорию</option>
+                    {selectedCategory && allCategories[selectedCategory].map((subcategory) => (
+                      <option key={subcategory.name} value={subcategory.name}>{subcategory.name}</option>
+                    ))}
+                  </select>
+                </div>
 
                 <div className={styles.formGroup}>
                   <label>Цена, ₽ *</label>
@@ -531,21 +546,21 @@ const handleDeleteListing = async (listingId) => {
                   <div className={styles.uploadContainer}>
                     <div 
                       className={styles.uploadArea}
-                      onClick={() => fileInputRef.current.click()}
+                      onClick={() => imageInputRef.current.click()}
                     >
-                      <FiUpload size={24} />
-                      <p>Перетащите файлы сюда или нажмите для выбора</p>
+                      <FiImage size={24} />
+                      <p>Перетащите изображения сюда или нажмите для выбора</p>
                       <input
                         type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
+                        ref={imageInputRef}
+                        onChange={(e) => handleFileChange(e, 'images')}
                         multiple
                         accept="image/*"
                         style={{ display: 'none' }}
                       />
                     </div>
                     
-                    {uploading && (
+                    {uploading && uploadType === 'images' && (
                       <div className={styles.progressBar}>
                         <div 
                           className={styles.progressFill} 
@@ -555,33 +570,106 @@ const handleDeleteListing = async (listingId) => {
                       </div>
                     )}
 
-<div className={styles.uploadedImages}>
-  {images.map((img, index) => {
-    // Проверяем тип - URL строка или объект изображения
-    const imgUrl = typeof img === 'string' 
-      ? img 
-      : `${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${img.path}`;
-    
-    return (
-      <div key={index} className={styles.imageItem}>
-        <img 
-          src={imgUrl} 
-          alt={`Preview ${index}`}
-          onError={(e) => {
-            // e.target.src = '/placeholder-image.jpg';
-          }}
-        />
-        <button 
-          type="button"
-          className={styles.removeImage}
-          onClick={() => handleRemoveImage(index)}
-        >
-          <FiX size={16} />
-        </button>
-      </div>
-    );
-  })}
-</div>
+                    <div className={styles.uploadedFiles}>
+                      {images.map((img, index) => {
+                        const imgUrl = typeof img === 'string' 
+                          ? img 
+                          : `${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${img.path}`;
+                        
+                        return (
+                          <div key={index} className={styles.fileItem}>
+                            <img 
+                              src={imgUrl} 
+                              alt={`Preview ${index}`}
+                              onError={(e) => {
+                                e.target.src = '/placeholder-image.jpg';
+                              }}
+                            />
+                            <button 
+                              type="button"
+                              className={styles.removeFile}
+                              onClick={() => handleRemoveImage(index)}
+                            >
+                              <FiX size={16} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Блок загрузки документов */}
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label>Документы (PDF, Word, PowerPoint)</label>
+                  <div className={styles.uploadContainer}>
+                    <div 
+                      className={styles.uploadArea}
+                      onClick={() => documentInputRef.current.click()}
+                    >
+                      <FiFile size={24} />
+                      <p>Перетащите документы сюда или нажмите для выбора</p>
+                      <input
+                        type="file"
+                        ref={documentInputRef}
+                        onChange={(e) => handleFileChange(e, 'documents')}
+                        multiple
+                        accept=".pdf,.doc,.docx,.ppt,.pptx"
+                        style={{ display: 'none' }}
+                      />
+                    </div>
+                    
+                    {uploading && uploadType === 'documents' && (
+                      <div className={styles.progressBar}>
+                        <div 
+                          className={styles.progressFill} 
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                        <span>{uploadProgress}%</span>
+                      </div>
+                    )}
+
+                    <div className={styles.uploadedDocs}>
+                      {documents.map((doc, index) => {
+                        const docUrl = typeof doc === 'string' 
+                          ? doc 
+                          : `${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${doc.path}`;
+                        const docName = typeof doc === 'string' 
+                          ? doc.split('/').pop() 
+                          : doc.originalname;
+                        
+                        return (
+                          <div key={index} className={styles.docItem}>
+                            <div className={styles.docIcon}>
+                              <img 
+                                src={getDocumentIcon(doc.mimetype || '')} 
+                                alt="Document type"
+                                onError={(e) => {
+                                  e.target.src = '/icons/file-icon.png';
+                                }}
+                              />
+                            </div>
+                            <div className={styles.docInfo}>
+                              <span className={styles.docName}>{docName}</span>
+                              <a 
+                                href={docUrl} 
+                                download
+                                className={styles.downloadBtn}
+                              >
+                                <FiDownload size={14} />
+                              </a>
+                            </div>
+                            <button 
+                              type="button"
+                              className={styles.removeDoc}
+                              onClick={() => handleRemoveDocument(index)}
+                            >
+                              <FiX size={16} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
@@ -606,6 +694,7 @@ const handleDeleteListing = async (listingId) => {
                     setIsModalOpen(false)
                     resetForm()
                     setImages([])
+                    setDocuments([])
                   }}
                 >
                   Отменить

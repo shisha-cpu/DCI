@@ -32,3 +32,37 @@ exports.deleteFile = async (req, res, next) => {
     next(err);
   }
 };
+
+// В controllers/file.controller.js
+exports.uploadImages = async (req, res, next) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Пожалуйста, загрузите хотя бы одно изображение'
+      });
+    }
+
+    const fileData = await Promise.all(req.files.map(async file => {
+      const newFile = await File.create({
+        filename: file.filename,
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        path: `/uploads/listings/${file.filename}`,
+        url: `${process.env.BASE_URL}/uploads/listings/${file.filename}`,
+        createdBy: req.user.id,
+        fileType: 'image'
+      });
+      return newFile;
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: fileData
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+

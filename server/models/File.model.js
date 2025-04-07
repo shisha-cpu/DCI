@@ -22,6 +22,11 @@ const FileSchema = new Schema({
     type: Number,
     required: true
   },
+  fileType: {
+    type: String,
+    enum: ['image', 'document', 'video'],
+    default: 'image'
+  },
   createdBy: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
