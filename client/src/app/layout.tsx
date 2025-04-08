@@ -6,7 +6,7 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'DCI CLUB - Инвестиционная платформа',
+  title: 'DSI CLUB - Инвестиционная платформа',
   description: 'Платформа для инвестиций в недвижимость и бизнес',
 }
 

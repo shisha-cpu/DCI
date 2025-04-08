@@ -72,7 +72,7 @@ export default function FilterSection({ onCategoryChange }) {
       <div className={styles.filterContent}>
         <div className={styles.headerWrapper}>
           <h1 className={styles.headerTitle}>
-            <span className={styles.titleGradient}>DCI CLUB</span> | Работаем по всей России
+            <span className={styles.titleGradient}>DSI CLUB</span> | Работаем по всей России
           </h1>
           <p className={styles.headerSubtitle}>Инвестиции в бизнес для каждого</p>
         </div>

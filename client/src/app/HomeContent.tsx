@@ -446,7 +446,7 @@ export default function Home() {
 
       {/* Benefits Section */}
       <section className={styles.benefitsSection}>
-        <h2 className={styles.benefitsTitle}>Почему выбирают DCI CLU?</h2>
+        <h2 className={styles.benefitsTitle}>Почему выбирают DSI CLU?</h2>
         <div className={styles.benefitsGrid}>
           <div className={styles.benefitCard}>
             <div className={styles.benefitIcon}>

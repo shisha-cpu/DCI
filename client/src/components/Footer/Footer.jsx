@@ -7,7 +7,7 @@ export default function Footer() {
       <div className={styles.container}>
         <div className={styles.grid}>
           <div>
-            <h3 className={styles.logo}>DCI CLUB</h3>
+            <h3 className={styles.logo}>DSI CLUB</h3>
             <p className={styles.description}>
               Платформа для инвестиций в недвижимость и бизнес
             </p>
@@ -30,7 +30,7 @@ export default function Footer() {
           </div>
           <div className={styles.ratingContainer}>
       <div className={styles.ratingHeader}>
-        Оценка  компании <strong>DCI CLUB</strong><br />
+        Оценка  компании <strong>DSI CLUB</strong><br />
 
       </div>
       
@@ -70,7 +70,7 @@ export default function Footer() {
           </div> */}
         </div>
         <div className={styles.copyright}>
-          <p>© {new Date().getFullYear()} DCI CLUB. Все права защищены.</p>
+          <p>© {new Date().getFullYear()} DSI CLUB. Все права защищены.</p>
         </div>
       </div>
     </footer>
