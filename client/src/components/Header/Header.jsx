@@ -13,6 +13,8 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [activeCategory, setActiveCategory] = useState(null)
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
+  const [currentLanguage, setCurrentLanguage] = useState('ru')
 
   const categories = {
     'Коммерческая недвижимость': [
@@ -108,6 +110,15 @@ export default function Header() {
     setActiveCategory(null)
   }
 
+  const toggleLanguageDropdown = () => {
+    setLanguageDropdownOpen(!languageDropdownOpen)
+  }
+
+  const selectLanguage = (lang) => {
+    setCurrentLanguage(lang)
+    setLanguageDropdownOpen(false)
+  }
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -118,6 +129,8 @@ export default function Header() {
         {isMobile ? (
           <>
             <div className={styles.mobileControls}>
+          
+
               <Link href={getLkUrl('favorites')} className={styles.favoritesIcon}>
                 <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -138,7 +151,6 @@ export default function Header() {
               <div className={styles.mobileMenu}>
                 <div className={styles.menuHeader}>
                   <h3>Меню</h3>
-              
                 </div>
 
                 <div className={styles.menuSections}>
@@ -231,7 +243,7 @@ export default function Header() {
                   </div>
                 </div>
 
-                <button className={styles.whiteSpace} onClick={()=>{closeAll ; setIsModalOpen(true)}}>
+                <button className={styles.whiteSpace} onClick={()=>{closeAll(); setIsModalOpen(true)}}>
                   Оставить заявку
                 </button>
               </div>
@@ -240,6 +252,44 @@ export default function Header() {
         ) : (
           <>
             <nav className={styles.nav}>
+              <div className={styles.languageSelector}>
+                <button 
+                  className={styles.languageButton}
+                  onClick={toggleLanguageDropdown}
+                >
+                  {currentLanguage === 'ru' ? 'Рус' : currentLanguage === 'en' ? 'Eng' : 'العربية'}
+                  <svg 
+                    className={`${styles.languageArrow} ${languageDropdownOpen ? styles.rotated : ''}`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                {languageDropdownOpen && (
+                  <div className={styles.languageDropdown}>
+                    <button 
+                      className={`${styles.languageOption} ${currentLanguage === 'ru' ? styles.activeLanguage : ''}`}
+                      onClick={() => selectLanguage('ru')}
+                    >
+                      Русский
+                    </button>
+                    <button 
+                      className={`${styles.languageOption} ${currentLanguage === 'en' ? styles.activeLanguage : ''}`}
+                      onClick={() => selectLanguage('en')}
+                    >
+                      English
+                    </button>
+                    <button 
+                      className={`${styles.languageOption} ${currentLanguage === 'ar' ? styles.activeLanguage : ''}`}
+                      onClick={() => selectLanguage('ar')}
+                    >
+                      العربية
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <Link href="/contacts" className={styles.navLink}>
                 <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
