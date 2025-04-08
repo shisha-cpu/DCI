@@ -55,7 +55,7 @@ exports.uploadListingImages = async (req, res, next) => {
     }
 
     const fileData = req.files.map(file => ({
-      url: `${process.env.BASE_URL || 'http://localhost:5000'}/uploads/listings/${file.filename}`,
+      url: `${process.env.BASE_URL || 'http://62.113.110.123:5000'}/uploads/listings/${file.filename}`,
       path: `/uploads/listings/${file.filename}`,
       filename: file.filename,
       originalname: file.originalname
