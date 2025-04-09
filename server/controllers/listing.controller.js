@@ -20,10 +20,13 @@ const processFiles = async (files, userId) => {
 const processUploadedFiles = async (files, userId) => {
   const imageIds = [];
   const documentIds = [];
+  const videoIds = [];
   
   if (files && files.length > 0) {
     for (const file of files) {
       const isImage = /jpe?g|png|gif/i.test(file.mimetype);
+      const isVideo = /mp4|mov|avi|wmv/i.test(file.mimetype);
+      
       const newFile = await File.create({
         filename: file.filename,
         originalname: file.originalname,
@@ -31,18 +34,20 @@ const processUploadedFiles = async (files, userId) => {
         size: file.size,
         path: `/uploads/listings/${file.filename}`,
         createdBy: userId,
-        fileType: isImage ? 'image' : 'document'
+        fileType: isImage ? 'image' : (isVideo ? 'video' : 'document')
       });
       
       if (isImage) {
         imageIds.push(newFile._id);
+      } else if (isVideo) {
+        videoIds.push(newFile._id);
       } else {
         documentIds.push(newFile._id);
       }
     }
   }
   
-  return { imageIds, documentIds };
+  return { imageIds, documentIds, videoIds };
 };
 exports.uploadListingImages = async (req, res, next) => {
   
@@ -73,97 +78,45 @@ exports.uploadListingImages = async (req, res, next) => {
 };
 exports.createListing = async (req, res, next) => {
   try {
-    console.log('Incoming request body:', req.body);
-    
     let imageIds = [];
-    let documentIds = []; // Теперь храним только ID документов
+    let videoIds = [];
+    let documentIds = [];
+    console.log(req.body.createdBy);
     
     // Обработка загруженных файлов
     if (req.files && req.files.length > 0) {
-      const result = await processUploadedFiles(req.files, req.user.id);
+      const result = await processUploadedFiles(req.files, req.body.createdBy);
       imageIds = result.imageIds;
-      documentIds = result.documentIds || [];
+      videoIds = result.videoIds;
+      documentIds = result.documentIds;
     }
     
-    // Обработка уже существующих файлов (из тела запроса)
+    // Обработка существующих файлов из тела запроса
     if (req.body.images && req.body.images.length > 0) {
-      imageIds = await Promise.all(req.body.images.map(async (image) => {
-        const imageUrl = typeof image === 'string' ? image : image.url || image.path;
-        
-        if (!imageUrl) {
-          console.warn('Invalid image format:', image);
-          return null;
-        }
-
-        const filename = imageUrl.split('/').pop();
-        
-        const existingFile = await File.findOne({ filename });
-        if (existingFile) {
-          console.log('Using existing file:', existingFile._id);
-          return existingFile._id;
-        }
-        
-        const newFile = await File.create({
-          filename,
-          path: `/uploads/listings/${filename}`,
-          originalname: filename,
-          mimetype: image.mimetype || 'image/png',
-          size: image.size || 0,
-          createdBy: req.body.createdBy
-        });
-
-        console.log('Created new file:', newFile._id);
-        return newFile._id;
-      }));
-
-      imageIds = imageIds.filter(id => id !== null);
+      imageIds = await processExistingFiles(req.body.images, req.body.createdBy, 'image');
     }
-
+    
+    if (req.body.videos && req.body.videos.length > 0) {
+      videoIds = await processExistingFiles(req.body.videos, req.body.createdBy, 'video');
+    }
+    
     if (req.body.documents && req.body.documents.length > 0) {
-      documentIds = await Promise.all(req.body.documents.map(async (doc) => {
-        const docUrl = typeof doc === 'string' ? doc : doc.url || doc.path;
-        
-        if (!docUrl) {
-          console.warn('Invalid document format:', doc);
-          return null;
-        }
-
-        const filename = docUrl.split('/').pop();
-        
-        const existingFile = await File.findOne({ filename });
-        if (existingFile) {
-          console.log('Using existing document:', existingFile._id);
-          return existingFile._id;
-        }
-        
-        const newFile = await File.create({
-          filename,
-          path: `/uploads/listings/${filename}`,
-          originalname: doc.originalname || filename,
-          mimetype: doc.mimetype || 'application/octet-stream',
-          size: doc.size || 0,
-          createdBy: req.body.createdBy,
-          fileType: 'document'
-        });
-
-        console.log('Created new document:', newFile._id);
-        return newFile._id;
-      }));
-
-      documentIds = documentIds.filter(id => id !== null);
+      documentIds = await processExistingFiles(req.body.documents, req.body.createdBy, 'document');
     }
 
     const listingData = {
       ...req.body,
       images: imageIds,
-      documents: documentIds // Теперь передаем только ID документов
+      videos: videoIds,
+      documents: documentIds,
+      createdBy: req.body.createdBy
     };
 
     const listing = await Listing.create(listingData);
     
-    // Добавляем populate для возврата полных данных
     const populatedListing = await Listing.findById(listing._id)
       .populate('images', 'path originalname mimetype')
+      .populate('videos', 'path originalname mimetype')
       .populate('documents', 'path originalname mimetype');
 
     res.status(201).json({
@@ -171,24 +124,59 @@ exports.createListing = async (req, res, next) => {
       data: populatedListing
     });
   } catch (err) {
-    console.error('Error in createListing:', err);
+    console.log(err);
+    
     next(err);
   }
 };
+async function processExistingFiles(files, userId, fileType) {
+  return Promise.all(files.map(async (file) => {
+    const fileUrl = typeof file === 'string' ? file : file.url || file.path;
+    if (!fileUrl) return null;
+
+    const filename = fileUrl.split('/').pop();
+    const existingFile = await File.findOne({ filename });
+    
+    if (existingFile) return existingFile._id;
+    
+    const newFile = await File.create({
+      filename,
+      path: `/uploads/listings/${filename}`,
+      originalname: file.originalname || filename,
+      mimetype: file.mimetype || getDefaultMimeType(fileType),
+      size: file.size || 0,
+      createdBy: userId,
+      fileType
+    });
+    
+    return newFile._id;
+  })).then(ids => ids.filter(id => id !== null));
+}
+function getDefaultMimeType(fileType) {
+  const types = {
+    image: 'image/jpeg',
+    video: 'video/mp4',
+    document: 'application/octet-stream'
+  };
+  return types[fileType] || 'application/octet-stream';
+}
 exports.updateListing = async (req, res, next) => {
   try {
     let imageIds = [];
+    let videoIds = [];
     let documentIds = [];
     
     if (req.files && req.files.length > 0) {
       const result = await processUploadedFiles(req.files, req.user.id);
       imageIds = result.imageIds;
+      videoIds = result.videoIds;
       documentIds = result.documentIds;
     }
     
     const listingData = {
       ...req.body,
       images: imageIds,
+      videos: videoIds,
       documents: documentIds
     };
 
@@ -198,6 +186,7 @@ exports.updateListing = async (req, res, next) => {
       { new: true, runValidators: true }
     )
     .populate('images', 'path originalname mimetype')
+    .populate('videos', 'path originalname mimetype')
     .populate('documents', 'path originalname mimetype');
 
     if (!listing) {
@@ -221,6 +210,10 @@ exports.getListings = async (req, res, next) => {
         select: 'path originalname mimetype'
       })
       .populate({
+        path: 'videos',
+        select: 'path originalname mimetype'
+      })
+      .populate({
         path: 'documents',
         select: 'path originalname mimetype'
       })
@@ -236,11 +229,16 @@ exports.getListings = async (req, res, next) => {
   }
 };
 
+
 exports.getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id)
       .populate({
         path: 'images',
+        select: 'path originalname mimetype'
+      })
+      .populate({
+        path: 'videos',
         select: 'path originalname mimetype'
       })
       .populate({
@@ -253,7 +251,6 @@ exports.getListing = async (req, res, next) => {
       return next(new ErrorResponse('Listing not found', 404));
     }
 
-    // Increment views
     listing.views += 1;
     await listing.save();
 
@@ -274,6 +271,10 @@ exports.getListingsByUser = async (req, res, next) => {
         select: 'path originalname mimetype'
       })
       .populate({
+        path: 'videos',
+        select: 'path originalname mimetype'
+      })
+      .populate({
         path: 'documents',
         select: 'path originalname mimetype'
       });
@@ -291,14 +292,15 @@ exports.deleteListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id)
       .populate('images')
+      .populate('videos')
       .populate('documents');
 
     if (!listing) {
       return next(new ErrorResponse('Listing not found', 404));
     }
 
-    // Объединяем все файлы (изображения и документы)
-    const allFiles = [...listing.images, ...listing.documents];
+    // Объединяем все файлы
+    const allFiles = [...listing.images, ...listing.videos, ...listing.documents];
     
     for (const file of allFiles) {
       try {

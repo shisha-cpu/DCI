@@ -24,6 +24,12 @@ const ListingSchema = new Schema({
       'other',
     ],
   },
+  videos: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'File',
+    },
+  ],
   category: {
     type: String,
     required: [true, 'Please select a category'],

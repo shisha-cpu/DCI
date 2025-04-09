@@ -648,3 +648,17 @@
 .removeDoc:hover {
   color: #f44336;
 }
+
+/* Стили для видео превью */
+.fileItem video {
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+  border-radius: 4px;
+  background: #000;
+}
+
+/* Иконка видео в области загрузки */
+.uploadArea svg[data-icon="video"] {
+  color: #ff4757;
+}

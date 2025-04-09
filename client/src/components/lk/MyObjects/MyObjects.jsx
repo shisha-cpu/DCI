@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import styles from './MyObjects.module.css'
-import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown, FiImage, FiUpload, FiFile, FiDownload } from 'react-icons/fi'
+import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown, FiImage, FiUpload, FiFile, FiDownload, FiVideo } from 'react-icons/fi'
 
 export default function MyObjects() {
   const [activeFilter, setActiveFilter] = useState('all')
@@ -20,7 +20,8 @@ export default function MyObjects() {
   const documentInputRef = useRef(null)
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
-
+  const [videos, setVideos] = useState([])
+  const videoInputRef = useRef(null)
   const allCategories = {
     'Коммерческая недвижимость': [
       { name: 'Торговый центр (здание)' },
@@ -151,10 +152,13 @@ export default function MyObjects() {
     const formData = new FormData();
     const endpoint = type === 'images' 
       ? '/listings/upload' 
+      : type === 'videos'
+      ? '/listings/upload-videos'
       : '/listings/upload-documents';
     
     files.forEach(file => {
-      formData.append(type === 'images' ? 'images' : 'documents', file);
+      formData.append(type === 'images' ? 'images' : 
+                     type === 'videos' ? 'videos' : 'documents', file);
     });
   
     try {
@@ -182,7 +186,19 @@ export default function MyObjects() {
             mimetype: img.mimetype
           }))
         ]);
-      } else {
+      } 
+      else if (type === 'videos') {
+        const uploadedVideos = result.data || result;
+        setVideos(prev => [
+          ...prev,
+          ...uploadedVideos.map(video => ({
+            path: video.path,
+            originalname: video.originalname || video.filename,
+            mimetype: video.mimetype
+          }))
+        ]);
+      }
+      else {
         const uploadedDocs = result.data || result;
         setDocuments(prev => [
           ...prev,
@@ -196,12 +212,17 @@ export default function MyObjects() {
       
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert(`Ошибка загрузки ${type === 'images' ? 'изображений' : 'документов'}: ${error.message}`);
+      alert(`Ошибка загрузки ${type === 'images' ? 'изображений' : 
+            type === 'videos' ? 'видео' : 'документов'}: ${error.message}`);
     } finally {
       setUploading(false);
       setUploadProgress(0);
     }
   };
+
+  const handleRemoveVideo = (index) => {
+    setVideos(prev => prev.filter((_, i) => i !== index))
+  }
 
   const handleRemoveImage = (index) => {
     setImages(prev => prev.filter((_, i) => i !== index))
@@ -224,6 +245,18 @@ export default function MyObjects() {
           };
         }
         return img;
+      });
+
+      const videosToSend = videos.map(video => {
+        if (typeof video === 'string') {
+          const filename = video.split('/').pop();
+          return {
+            path: `/uploads/listings/${filename}`,
+            originalname: filename,
+            mimetype: 'video/mp4'
+          };
+        }
+        return video;
       });
 
       const documentsToSend = documents.map(doc => {
@@ -249,6 +282,7 @@ export default function MyObjects() {
           category: selectedCategory,
           subcategory: selectedSubcategory,
           images: imagesToSend,
+          videos: videosToSend,
           documents: documentsToSend,
           createdBy: user.user._id,
           status: 'pending'
@@ -262,6 +296,7 @@ export default function MyObjects() {
       setIsModalOpen(false);
       resetForm();
       setImages([]);
+      setVideos([]);
       setDocuments([]);
     } catch (error) {
       console.error('Error:', error);
@@ -598,7 +633,60 @@ console.log(listings);
                     </div>
                   </div>
                 </div>
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label>Видео объекта (MP4, MOV, AVI)</label>
+                  <div className={styles.uploadContainer}>
+                    <div 
+                      className={styles.uploadArea}
+                      onClick={() => videoInputRef.current.click()}
+                    >
+                      <FiVideo size={24} />
+                      <p>Перетащите видео сюда или нажмите для выбора</p>
+                      <input
+                        type="file"
+                        ref={videoInputRef}
+                        onChange={(e) => handleFileChange(e, 'videos')}
+                        multiple
+                        accept="video/*"
+                        style={{ display: 'none' }}
+                      />
+                    </div>
+                    
+                    {uploading && uploadType === 'videos' && (
+                      <div className={styles.progressBar}>
+                        <div 
+                          className={styles.progressFill} 
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                        <span>{uploadProgress}%</span>
+                      </div>
+                    )}
 
+                    <div className={styles.uploadedFiles}>
+                      {videos.map((video, index) => {
+                        const videoUrl = typeof video === 'string' 
+                          ? video 
+                          : `${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${video.path}`;
+                        
+                        return (
+                          <div key={index} className={styles.fileItem}>
+                            <video controls width="120" height="90">
+                              <source src={videoUrl} type={video.mimetype || 'video/mp4'} />
+                              Ваш браузер не поддерживает видео тег.
+                            </video>
+                            <button 
+                              type="button"
+                              className={styles.removeFile}
+                              onClick={() => handleRemoveVideo(index)}
+                            >
+                              <FiX size={16} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
                 {/* Блок загрузки документов */}
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label>Документы (PDF, Word, PowerPoint)</label>

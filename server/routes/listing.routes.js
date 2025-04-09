@@ -30,14 +30,45 @@ const upload = multer({
   fileFilter: (_, file, cb) => {
     const imageTypes = /jpe?g|png|gif/;
     const docTypes = /pdf|docx?|ppt|pptx/;
+    const videoTypes = /mp4|mov|avi|wmv/;
     
-    const mimetype = imageTypes.test(file.mimetype) || docTypes.test(file.mimetype);
+    const mimetype = imageTypes.test(file.mimetype) || 
+                   docTypes.test(file.mimetype) || 
+                   videoTypes.test(file.mimetype);
     const extname = imageTypes.test(path.extname(file.originalname).toLowerCase()) || 
-                   docTypes.test(path.extname(file.originalname).toLowerCase());
+                   docTypes.test(path.extname(file.originalname).toLowerCase()) ||
+                   videoTypes.test(path.extname(file.originalname).toLowerCase());
     
-    mimetype && extname ? cb(null, true) : cb(new Error('Only images and documents (PDF, DOC, DOCX, PPT, PPTX) are allowed'));
+    mimetype && extname ? cb(null, true) : cb(new Error('Only images, videos and documents are allowed'));
   },
-  limits: { fileSize: 15 * 1024 * 1024 } // 15MB (увеличили для документов)
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB (увеличили для видео)
+});
+router.post('/upload-videos', upload.array('videos', 5), async (req, res, next) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Пожалуйста, загрузите хотя бы одно видео'
+      });
+    }
+
+    const fileData = req.files.map(file => ({
+      url: `${process.env.BASE_URL || 'http://localhost:5000'}/uploads/listings/${file.filename}`,
+      path: `/uploads/listings/${file.filename}`,
+      filename: file.filename,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size,
+      fileType: 'video'
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: fileData
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 // Маршрут для загрузки документов
 router.post('/upload-documents', upload.array('documents', 5), async (req, res, next) => {
