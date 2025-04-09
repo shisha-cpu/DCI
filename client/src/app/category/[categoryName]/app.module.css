@@ -158,7 +158,10 @@
     outline: none;
     border-color: #86efac;
   }
-  
+  .select option{
+    background-color: #e8f5e9; /* светло-зелёный фон */
+    color: #1b5e20;
+  }
   /* Счетчик результатов */
   .resultsCount {
     font-size: 0.875rem;

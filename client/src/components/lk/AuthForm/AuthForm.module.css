@@ -17,6 +17,13 @@
   padding: 2.5rem;
 }
 
+
+
+.formInput option {
+  background-color: #e8f5e9;
+  color: #1b5e20;       
+}
+
 .authHeader {
   margin-bottom: 1.5rem;
   text-align: center;
