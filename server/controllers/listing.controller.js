@@ -161,9 +161,14 @@ exports.createListing = async (req, res, next) => {
 
     const listing = await Listing.create(listingData);
     
+    // Добавляем populate для возврата полных данных
+    const populatedListing = await Listing.findById(listing._id)
+      .populate('images', 'path originalname mimetype')
+      .populate('documents', 'path originalname mimetype');
+
     res.status(201).json({
       success: true,
-      data: listing
+      data: populatedListing
     });
   } catch (err) {
     console.error('Error in createListing:', err);
@@ -191,7 +196,9 @@ exports.updateListing = async (req, res, next) => {
       req.params.id, 
       listingData, 
       { new: true, runValidators: true }
-    ).populate('images').populate('documents');
+    )
+    .populate('images', 'path originalname mimetype')
+    .populate('documents', 'path originalname mimetype');
 
     if (!listing) {
       return next(new ErrorResponse('Listing not found', 404));
@@ -209,8 +216,14 @@ exports.updateListing = async (req, res, next) => {
 exports.getListings = async (req, res, next) => {
   try {
     const listings = await Listing.find()
-      .populate('images', 'path originalname mimetype')
-      .populate('documents', 'path originalname mimetype')
+      .populate({
+        path: 'images',
+        select: 'path originalname mimetype'
+      })
+      .populate({
+        path: 'documents',
+        select: 'path originalname mimetype'
+      })
       .populate('createdBy', 'name email');
 
     res.status(200).json({
@@ -223,11 +236,17 @@ exports.getListings = async (req, res, next) => {
   }
 };
 
-// Аналогично для других методов получения
 exports.getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id)
-      .populate('images', 'path originalname')
+      .populate({
+        path: 'images',
+        select: 'path originalname mimetype'
+      })
+      .populate({
+        path: 'documents',
+        select: 'path originalname mimetype'
+      })
       .populate('createdBy', 'name email');
 
     if (!listing) {
@@ -250,9 +269,15 @@ exports.getListing = async (req, res, next) => {
 exports.getListingsByUser = async (req, res, next) => {
   try {
     const listings = await Listing.find({ createdBy: req.params.userId })
-      .populate('images', 'path originalname');
+      .populate({
+        path: 'images',
+        select: 'path originalname mimetype'
+      })
+      .populate({
+        path: 'documents',
+        select: 'path originalname mimetype'
+      });
 
-    
     res.status(200).json({
       success: true,
       count: listings.length,
@@ -262,7 +287,6 @@ exports.getListingsByUser = async (req, res, next) => {
     next(err);
   }
 };
-
 exports.deleteListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id)
