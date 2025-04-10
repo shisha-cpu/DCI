@@ -1,0 +1,187 @@
+/* UsersSection.module.css */
+
+.sectionContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  
+  .sectionTitle {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  
+  /* Controls section */
+  .controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+  
+  .searchInput {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #d1e7dd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #88c9a1;
+    box-shadow: 0 0 0 3px rgba(136, 201, 161, 0.2);
+  }
+  
+  .refreshButton {
+    padding: 0.75rem 1.5rem;
+    background-color: #88c9a1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .refreshButton:hover {
+    background-color: #6bbd8d;
+    transform: translateY(-1px);
+  }
+  
+  /* Tabs styling */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #d1e7dd;
+    padding-bottom: 0.5rem;
+  }
+  
+  .tab {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #5a6d7b;
+    transition: all 0.2s ease;
+  }
+  
+  .tab:hover {
+    background-color: #e8f5ee;
+    color: #2c3e50;
+  }
+  
+  .activeTab {
+    padding: 0.5rem 1rem;
+    background-color: #a8d8b9;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #1a3e29;
+  }
+  
+  /* Users list */
+  .users {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  
+  .userCard {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e6ed;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .userCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .userInfo h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  
+  .userInfo p {
+    margin: 0.5rem 0;
+    color: #4a5c6b;
+    font-size: 0.95rem;
+  }
+  
+  .userInfo p strong {
+    color: #3a4a58;
+    font-weight: 600;
+  }
+  
+  .blockButton {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f0f7f4;
+    color: #d64045;
+    border: 1px solid #d1e7dd;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .blockButton:hover {
+    background-color: #d64045;
+    color: white;
+  }
+  
+  /* Status indicators */
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: #5a6d7b;
+  }
+  
+  .error {
+    text-align: center;
+    padding: 2rem;
+    color: #d64045;
+    background-color: #fde8e8;
+    border-radius: 8px;
+  }
+  
+  .noResults {
+    text-align: center;
+    padding: 2rem;
+    color: #5a6d7b;
+    grid-column: 1 / -1;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .tabs {
+      overflow-x: auto;
+      padding-bottom: 0;
+    }
+    
+    .users {
+      grid-template-columns: 1fr;
+    }
+  }

@@ -78,8 +78,8 @@ export default function FilterSection({ onCategoryChange }) {
           </h1>
           <p className={styles.headerSubtitle}>Инвестиции в бизнес для каждого</p>
         </div>
-        
-        <div className={styles.categories}>
+      
+        {/* <div className={styles.categories}>
           {categories.map((category) => (
             <button
               key={category}
@@ -133,8 +133,10 @@ export default function FilterSection({ onCategoryChange }) {
             Показать результаты
             <span className={styles.buttonArrow}>&rarr;</span>
           </button>
-        </form>
+        </form> */}
+       
       </div>
+
     </div>
   )
 }

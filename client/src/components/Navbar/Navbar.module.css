@@ -1,12 +1,17 @@
 /* Navbar.module.css */
 .navbar {
-  position: sticky;
+  /* position: sticky; */
   top: 0;
-  z-index: 999;
+  z-index: 1000;
   background-color: white;
-  border-bottom: 2px solid #A5D6A7; /* Фисташковая рамка */
+  border-bottom: 2px solid #A5D6A7;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  top: 50px;
 }
 
 .fullWidthContainer {
@@ -18,112 +23,164 @@
   max-width: 1800px;
   margin: 0 auto;
   padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
-.mainMenu {
+.menuRows {
   display: flex;
-  justify-content: space-between;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  flex-direction: column;
+  width: 100%;
   gap: 8px;
+  justify-content: center;
+}
+
+.menuRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0;
 }
 
 .menuItem {
   position: relative;
-  padding: 16px 12px;
+  flex-shrink: 0;
+  
 }
 
 .menuLink {
-  color: #2E7D32; /* Темно-зеленый цвет текста */
-  font-weight: 600;
-
-  text-decoration: none;
-  font-size: 15px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 8px 0;
   position: relative;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  border: 2px solid #A5D6A7;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 6px;
+  text-decoration: none;
+}
+
+.menuLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  color: #166534;
+}
+
+.activeCategory {
+  background-color: #166534;
+  color: white;
+  border-color: #166534;
+  box-shadow: 0 4px 15px rgba(22, 101, 52, 0.2);
+}
+
+.activeCategory:hover {
+  color: white;
 }
 
 .menuIcon {
   font-size: 12px;
-  opacity: 0.8;
-  transition: transform 0.2s ease;
-  color: #4CAF50; /* Зеленый цвет иконки */
+  transition: transform 0.3s ease;
 }
 
 .menuItem:hover .menuIcon {
   transform: rotate(180deg);
 }
 
-.menuLink:hover {
-  color: #4CAF50; /* Зеленый цвет при наведении */
-}
-
-.menuItem:hover .menuLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #A5D6A7; /* Фисташковый цвет подчеркивания */
-  border-radius: 2px;
-}
-
 .submenu {
   position: absolute;
-  left: 0;
-  top: calc(100% - 2px);
-  width: 280px;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%) translateY(8px);
+  width: auto;
+  min-width: 600px;
+  max-width: 90vw;
   background: white;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 12px 12px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
   border: 1px solid #E8F5E9;
-  border-top: 2px solid #A5D6A7; /* Фисташковая верхняя граница */
+  border-top: 2px solid #A5D6A7;
+  padding: 16px;
+  overflow: hidden;
 }
 
 .menuItem:hover .submenu {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
-.submenuInner {
-  padding: 12px 0;
+.submenuColumns {
+  display: flex;
+  gap: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #A5D6A7 #f1f1f1;
+  padding-right: 8px;
+}
+
+.submenuColumns::-webkit-scrollbar {
+  width: 6px;
+}
+
+.submenuColumns::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.submenuColumns::-webkit-scrollbar-thumb {
+  background-color: #A5D6A7;
+  border-radius: 3px;
+}
+
+.submenuColumn {
   display: flex;
   flex-direction: column;
+  min-width: 180px;
+  flex: 1;
 }
 
 .submenuLink {
   display: flex;
   align-items: center;
-  padding: 10px 24px;
+  padding: 8px 12px;
   color: #4b5563;
   text-decoration: none;
   font-size: 14px;
   transition: all 0.2s ease;
   gap: 8px;
+  white-space: nowrap;
+  border-radius: 6px;
 }
 
 .submenuIcon {
   font-size: 12px;
   opacity: 0;
   transition: all 0.2s ease;
-  color: #4CAF50; /* Зеленый цвет иконки */
+  color: #4CAF50;
 }
 
 .submenuLink:hover {
   color: #2E7D32;
-  background-color: #F1F8E9; /* Светло-зеленый фон при наведении */
+  background-color: #F1F8E9;
 }
 
 .submenuLink:hover .submenuIcon {
@@ -131,46 +188,155 @@
   transform: translateX(4px);
 }
 
-@media (max-width: 1024px) {
+/* Price Filter Styles */
+.priceFilter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  flex-shrink: 0;
+}
+
+.filterGroup {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filterInput {
+  padding: 10px 16px 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+  width: 120px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+}
+
+.filterInput:focus {
+  outline: none;
+  border-color: #86efac;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.filterInput::placeholder {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.currency {
+  position: absolute;
+  right: 12px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.filterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #166534 0%, #22c55e 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(22, 101, 52, 0.3);
+  white-space: nowrap;
+}
+
+.filterButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 101, 52, 0.4);
+}
+
+/* Responsive Styles */
+@media (max-width: 1280px) {
   .contentContainer {
     padding: 0 16px;
   }
   
-  .mainMenu {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 4px;
-  }
-  
-  .menuItem {
-    padding: 12px 8px;
-  }
-  
   .menuLink {
-    font-size: 14px;
+    padding: 8px 16px;
   }
   
   .submenu {
-    width: 240px;
+    min-width: 500px;
   }
 }
-/* Navbar.module.css */
-.navbar {
-  position: sticky;
-  top: 0; /* По умолчанию без отступа */
-  z-index: 999; /* Убедитесь, что z-index меньше чем у header */
-  background-color: white;
-  border-bottom: 2px solid #A5D6A7;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  transition: top 0.3s ease; /* Плавная анимация сдвига */
+
+@media (max-width: 1024px) {
+  .priceFilter {
+    display: none;
+  }
+  
+  .submenu {
+    min-width: 400px;
+    left: 0;
+    transform: translateY(8px);
+    max-width: calc(100vw - 32px);
+  }
+  
+  .menuItem:hover .submenu {
+    transform: translateY(0);
+  }
+  
+  .submenuColumns {
+    max-height: 50vh;
+  }
 }
 
-.navbar.scrolled {
-  top: 50px; /* Отступ при скролле */
+@media (max-width: 768px) {
+  .navbar {
+    top: 60px;
+  }
+  
+  .menuLink {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .submenu {
+    min-width: 300px;
+  }
+  
+  .submenuColumns {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
-.navbar {
-  position: sticky;
-  top: 110px; 
 
+@media (max-width: 480px) {
+  .navbar {
+    top: 50px;
+  }
+  
+  .contentContainer {
+    padding: 0 8px;
+  }
+  
+  .menuLink {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .submenu {
+    min-width: 280px;
+    padding: 12px;
+  }
+  
+  .submenuColumn {
+    min-width: auto;
+  }
 }

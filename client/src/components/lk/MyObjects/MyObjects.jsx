@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import styles from './MyObjects.module.css'
+import Link from 'next/link';
 import { FiPlus, FiX, FiTrash2, FiEdit2, FiChevronDown, FiImage, FiUpload, FiFile, FiDownload, FiVideo } from 'react-icons/fi'
 
 export default function MyObjects() {
@@ -458,9 +459,14 @@ console.log(listings);
           <p>Загрузка данных...</p>
         </div>
       ) : filteredListings.length > 0 ? (
-        <div className={styles.grid}>
-          {filteredListings.map(listing => (
-            <div key={listing._id} className={styles.card}>
+<div className={styles.grid}>
+  {filteredListings.map(listing => (
+    <Link 
+      key={listing._id} 
+      href={`/item/${listing._id}`}
+      className={styles.cardLink}
+    >
+      <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h3>{listing.title}</h3>
                 <div className={styles.actions}>
@@ -505,9 +511,10 @@ console.log(listings);
                   </span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+              </div>
+    </Link>
+  ))}
+</div>
       ) : (
         <div className={styles.emptyState}>
           <div className={styles.emptyIllustration}>

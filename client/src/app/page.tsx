@@ -3,6 +3,7 @@ import HomeContent from './HomeContent'
 import Navbar from '@/components/Navbar/Navbar'
 import './main.css'
 import { useState , useEffect } from 'react'
+import FilterSection from '@/components/Filter/FilterSection'
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function Home() {
   return (
 <>
 {!isMobile ? <Navbar /> : ''}
+<FilterSection />
 <HomeContent />
 </>
   )

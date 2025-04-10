@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import Header from '../components/Header/Header'
 import Footer from '../components/Footer/Footer'
 import { Providers } from './providers';
-const inter = Inter({ subsets: ['latin'] })
+
 
 export const metadata = {
   title: 'DSI CLUB - Инвестиционная платформа',
@@ -13,7 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ru">
-      <body className={inter.className}>
+      <body >
       <Providers>
         <div className="min-h-screen flex flex-col">
           <Header />

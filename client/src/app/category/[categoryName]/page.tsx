@@ -5,217 +5,22 @@ import styles from './app.module.css'
 import { FaRegHeart, FaHeart, FaBalanceScale, FaSearch, FaTimes, FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { useState, useMemo , useEffect} from 'react'
 import Link from 'next/link'
-const businessCategories = {
-  'Коммерческая недвижимость': [
-    {
-      id: 1,
-      title: 'Торговый центр в центре города',
-      price: 120000000,
-      location: { city: 'Москва' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Сдаётся в аренду, якорные арендаторы'
-    },
-    {
-      id: 2,
-      title: 'Офисный центр класса B+',
-      price: 65000000,
-      location: { city: 'Санкт-Петербург' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Заполнен арендаторами на 90%'
-    },
-    {
-      id: 101,
-      title: 'Гостиница у моря',
-      price: 47000000,
-      location: { city: 'Сочи' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: '35 номеров, рейтинг 4.8 на Booking'
-    }
-  ],
-  'Жилая недвижимость': [
-    {
-      id: 3,
-      title: 'Квартира бизнес-класса в ЖК',
-      price: 18000000,
-      location: { city: 'Казань' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: '3 комнаты, 87 м², новая отделка'
-    },
-    {
-      id: 4,
-      title: 'Коттедж в черте города',
-      price: 25000000,
-      location: { city: 'Екатеринбург' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Площадь дома 200 м², участок 10 соток'
-    },
-    {
-      id: 103,
-      title: 'Таунхаус с дизайнерским ремонтом',
-      price: 14500000,
-      location: { city: 'Краснодар' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Закрытая территория, 2 этажа'
-    }
-  ],
-  'Земельные участки': [
-    {
-      id: 5,
-      title: 'Участок под ИЖС',
-      price: 1300000,
-      location: { city: 'Ростов-на-Дону' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Площадь 8 соток, коммуникации рядом'
-    },
-    {
-      id: 6,
-      title: 'Коммерческий участок у трассы',
-      price: 4800000,
-      location: { city: 'Нижний Новгород' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Идеально под АЗС или логистику'
-    },
-    {
-      id: 105,
-      title: 'Земля под фермерское хозяйство',
-      price: 2200000,
-      location: { city: 'Тамбов' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: '20 га, плодородная почва'
-    }
-  ],
-  'Производство': [
-    {
-      id: 7,
-      title: 'Цех по деревообработке с оборудованием',
-      price: 9500000,
-      location: { city: 'Пермь' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Площадь 1200 м², производственная лицензия'
-    },
-    {
-      id: 8,
-      title: 'Химическое производство',
-      price: 18500000,
-      location: { city: 'Волгоград' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Налаженное производство, сбытовая сеть'
-    },
-    {
-      id: 107,
-      title: 'Мини-пекарня с оборудованием',
-      price: 3200000,
-      location: { city: 'Киров' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Производство хлеба и выпечки'
-    }
-  ],
-  'Сельхоз активы': [
-    {
-      id: 9,
-      title: 'Птицефабрика полного цикла',
-      price: 32000000,
-      location: { city: 'Краснодар' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Производительность: 200 тыс. голов в месяц'
-    },
-    {
-      id: 10,
-      title: 'Тепличный комплекс',
-      price: 27000000,
-      location: { city: 'Астрахань' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Современное оборудование, круглогодичное выращивание'
-    },
-    {
-      id: 109,
-      title: 'Зерновое хозяйство',
-      price: 39000000,
-      location: { city: 'Оренбург' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: '250 га, урожайность выше средней'
-    }
-  ],
-  'Рестораны и развлечения': [
-    {
-      id: 11,
-      title: 'Ресторан в центре города',
-      price: 7800000,
-      location: { city: 'Сочи' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Рейтинг 4.9, раскрученный бренд'
-    },
-    {
-      id: 12,
-      title: 'Развлекательный комплекс с кинотеатром',
-      price: 54000000,
-      location: { city: 'Новосибирск' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Высокая проходимость, стабильный доход'
-    },
-    {
-      id: 111,
-      title: 'Бар с музыкальной сценой',
-      price: 3800000,
-      location: { city: 'Казань' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Полностью оборудован, есть лицензия'
-    }
-  ],
-  'Спецтехника и транспорт': [
-    {
-      id: 13,
-      title: 'Флот строительной техники',
-      price: 21500000,
-      location: { city: 'Челябинск' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Экскаваторы, бульдозеры, автокраны'
-    },
-    {
-      id: 14,
-      title: 'Автобусный парк (туристические маршруты)',
-      price: 16500000,
-      location: { city: 'Уфа' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: '10 автобусов, готовый бизнес'
-    },
-    {
-      id: 113,
-      title: 'Сельхоз техника — трактора и сеялки',
-      price: 9800000,
-      location: { city: 'Саратов' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: '5 единиц, отличное состояние'
-    }
-  ],
-  'Финансовые активы': [
-    {
-      id: 15,
-      title: 'Портфель ценных бумаг',
-      price: 5000000,
-      location: { city: 'Москва' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Доходность 14% годовых'
-    },
-    {
-      id: 16,
-      title: 'Нематериальные активы — патенты и бренды',
-      price: 8900000,
-      location: { city: 'Санкт-Петербург' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Регистрация в Роспатенте, готово к продаже'
-    },
-    {
-      id: 115,
-      title: 'Дебиторская задолженность',
-      price: 3200000,
-      location: { city: 'Новосибирск' },
-      images: [{ path: '/placeholder.jpg' }],
-      details: 'Надёжный заёмщик, юридически оформлено'
-    }
-  ]
-};
+interface Listing {
+  id: number
+  title: string
+  price: number
+  location: { city: string }
+  images: { path: string }[]
+  details: string
+  category: string
+  subcategory?: string  // Добавьте это
+  description?: string  // И это, если используется
+  _id?: string         // И это, если используется
+}
 
+interface BusinessCategories {
+  [key: string]: Listing[]
+}
 const propertyCategories= {
   'Готовый арендный бизнес (ГАБ)': [
     'Продажа готового бизнеса',
@@ -353,14 +158,51 @@ export default function CategoryPage() {
   const [sortOption, setSortOption] = useState('default')
   const [sortDirection, setSortDirection] = useState<'asc'|'desc'>('asc')
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>(subcategoryParam)
-
+  const [businessCategories, setBusinessCategories] = useState<BusinessCategories>({})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   // Находим правильное название категории
   const actualCategoryName = Object.keys(propertyCategories).find(
     key => key.toLowerCase().replace(/\s+/g, '-') === categoryName.toLowerCase()
-  ) || Object.keys(propertyCategories)[0] 
-  
+  ) || Object.keys(propertyCategories)[0]
   // Получаем подкатегории для текущей категории
   const subcategories = propertyCategories[actualCategoryName as keyof typeof propertyCategories] || []
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/listings`)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch listings')
+        }
+        const data: Listing[] = await response.json()
+        
+        // Check if the response has a data property (array) or is the array itself
+        const listingsArray = Array.isArray(data) ? data : (data.data || [])
+        
+        // Группировка объявлений по категориям
+        const grouped: BusinessCategories = {}
+        listingsArray.forEach(listing => {
+          if (!listing.category) return // Skip if no category
+          
+          if (!grouped[listing.category]) {
+            grouped[listing.category] = []
+          }
+          grouped[listing.category].push(listing)
+        })
+        
+        setBusinessCategories(grouped)
+        setLoading(false)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error')
+        setLoading(false)
+      }
+    }
+  
+    fetchListings()
+  }, [])
+
+
 
   // Применяем параметры из URL при загрузке
   useEffect(() => {
@@ -380,60 +222,72 @@ export default function CategoryPage() {
 
   // Фильтрация и сортировка объектов
   const filteredItems = useMemo(() => {
-    let items = businessCategories[actualCategoryName as keyof typeof businessCategories] || []
-    
+    // Ensure we have an array, even if the category doesn't exist
+    let items = (businessCategories[actualCategoryName as keyof typeof businessCategories] || [])
+      .filter(item => item) // Remove any undefined/null items
+  
     // Фильтрация по поисковому запросу
     if (searchQuery) {
+      const query = searchQuery.toLowerCase()
       items = items.filter(item => 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.details.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+        (item.title?.toLowerCase()?.includes(query) ||
+        (item.description?.toLowerCase()?.includes(query)) ||
+        (item.details?.toLowerCase()?.includes(query))
+      ))
     }
-    
+  
     // Фильтрация по цене
     if (investmentFrom) {
       const from = parseInt(investmentFrom)
       if (!isNaN(from)) {
-        items = items.filter(item => item.price >= from)
+        items = items.filter(item => item.price && item.price >= from)
       }
     }
-    
+  
     if (investmentTo) {
       const to = parseInt(investmentTo)
       if (!isNaN(to)) {
-        items = items.filter(item => item.price <= to)
+        items = items.filter(item => item.price && item.price <= to)
       }
     }
-    
+  
     // Фильтрация по подкатегории
     if (selectedSubcategory) {
-      const decodedSubcategory = decodeURIComponent(selectedSubcategory)
-      items = items.filter(item => 
-        item.details.includes(decodedSubcategory) || 
-        item.title.includes(decodedSubcategory)
-      )
+      // Сравниваем с подкатегорией в данных, учитывая возможные форматы
+      items = items.filter(item => {
+        if (!item.subcategory) return false
+        
+        // Приводим обе подкатегории к сравнимому формату
+        const itemSubcategorySlug = item.subcategory.toLowerCase().replace(/\s+/g, '-')
+        const selectedSlug = selectedSubcategory.toLowerCase()
+        
+        return itemSubcategorySlug === selectedSlug
+      })
     }
-    
+  
     // Сортировка
     switch (sortOption) {
       case 'price':
-        items.sort((a, b) => sortDirection === 'asc' ? a.price - b.price : b.price - a.price)
+        items.sort((a, b) => sortDirection === 'asc' ? 
+          (a.price || 0) - (b.price || 0) : 
+          (b.price || 0) - (a.price || 0))
         break
       case 'popularity':
         items.sort((a, b) => sortDirection === 'asc' ? 
-          (a.id - b.id) : (b.id - a.id))
+          ((a._id || '').localeCompare(b._id || '')) : 
+          ((b._id || '').localeCompare(a._id || '')))
         break
       case 'title':
         items.sort((a, b) => sortDirection === 'asc' ? 
-          a.title.localeCompare(b.title) : b.title.localeCompare(a.title))
+          (a.title || '').localeCompare(b.title || '') : 
+          (b.title || '').localeCompare(a.title || ''))
         break
       default:
         break
     }
-    
+  
     return items
-  }, [actualCategoryName, searchQuery, investmentFrom, investmentTo, sortOption, sortDirection, selectedSubcategory])
-
+  }, [actualCategoryName, searchQuery, investmentFrom, investmentTo, sortOption, sortDirection, selectedSubcategory, businessCategories])
   const clearSearch = () => {
     setSearchQuery('')
     setInvestmentFrom('')
@@ -447,162 +301,171 @@ export default function CategoryPage() {
     setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
   }
 
+  if (loading) {
+    return <div className={styles.loading}>Загрузка данных...</div>
+  }
+
+
+
   return (
     <div className={styles.filtersContainer}>
-      <h1 className={styles.pageTitle}>Каталог {actualCategoryName.toLowerCase()}</h1>
-      
-      {/* Фильтр по подкатегориям */}
-      <div className={styles.subcategoryFilter}>
-        <select 
-          className={styles.select}
-          value={selectedSubcategory}
-          onChange={(e) => setSelectedSubcategory(e.target.value)}
-        >
-          <option value="">Все подкатегории</option>
-          {subcategories.map(subcategory => {
-            const subcategorySlug = subcategory.toLowerCase().replace(/\s+/g, '-')
-            return (
-              <option key={subcategorySlug} value={subcategorySlug}>
-                {subcategory}
-              </option>
-            )
-          })}
-        </select>
-      </div>
+    <h1 className={styles.pageTitle}>Каталог {actualCategoryName.toLowerCase()}</h1>
+    
+    {/* Фильтр по подкатегориям */}
+    <div className={styles.subcategoryFilter}>
+      <select 
+        className={styles.select}
+        value={selectedSubcategory}
+        onChange={(e) => setSelectedSubcategory(e.target.value)}
+      >
+        <option value="">Все подкатегории</option>
+        {subcategories.map(subcategory => {
+          const subcategorySlug = subcategory.toLowerCase().replace(/\s+/g, '-')
+          return (
+            <option key={subcategorySlug} value={subcategorySlug}>
+              {subcategory}
+            </option>
+          )
+        })}
+      </select>
+    </div>
 
-      <div className={styles.searchRow}>
-        <div className={styles.searchWrapper}>
-          <FaSearch className={styles.searchIcon} />
-          <input
-            className={styles.inputWide}
-            placeholder="Поиск по названию или описанию"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className={styles.clearButton}>
-              <FaTimes />
-            </button>
-          )}
-        </div>
-        <div className={styles.extraFilters}>
-          <button className={styles.filterLink}>
-            <FaBalanceScale /> Ещё фильтры
+    <div className={styles.searchRow}>
+      <div className={styles.searchWrapper}>
+        <FaSearch className={styles.searchIcon} />
+        <input
+          className={styles.inputWide}
+          placeholder="Поиск по названию или описанию"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {searchQuery && (
+          <button onClick={() => setSearchQuery('')} className={styles.clearButton}>
+            <FaTimes />
           </button>
-          {(searchQuery || investmentFrom || investmentTo || selectedSubcategory !== '') && (
-            <button onClick={clearSearch} className={styles.resetLink}>
-              <FaTimes /> Сбросить
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.filterRow}>
-        <div className={styles.priceFilter}>
-          <input 
-            className={styles.input} 
-            placeholder="Цена от" 
-            value={investmentFrom}
-            onChange={(e) => setInvestmentFrom(e.target.value)}
-            type="number"
-          />
-          <span className={styles.priceSeparator}>—</span>
-          <input 
-            className={styles.input} 
-            placeholder="Цена до" 
-            value={investmentTo}
-            onChange={(e) => setInvestmentTo(e.target.value)}
-            type="number"
-          />
-        </div>
-        <div className={styles.sortContainer}>
-          <select 
-            className={styles.select}
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-          >
-            <option value="default">Сортировка</option>
-            <option value="price">По цене</option>
-            <option value="title">По названию</option>
-            <option value="popularity">По популярности</option>
-          </select>
-          {sortOption !== 'default' && (
-            <button 
-              onClick={toggleSortDirection} 
-              className={styles.sortDirectionButton}
-            >
-              {sortDirection === 'asc' ? <FaArrowUp /> : <FaArrowDown />}
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.resultsCount}>
-        Найдено объектов: {filteredItems.length}
-        {selectedSubcategory && (
-          <span className={styles.selectedSubcategory}>
-            • Подкатегория: {selectedSubcategory}
-          </span>
-        )}
-        {(minPriceParam || maxPriceParam) && (
-          <span className={styles.selectedSubcategory}>
-            • Цена: {minPriceParam ? `от ${parseInt(minPriceParam).toLocaleString('ru-RU')} ₽` : ''}
-            {maxPriceParam ? ` до ${parseInt(maxPriceParam).toLocaleString('ru-RU')} ₽` : ''}
-          </span>
         )}
       </div>
-
-      <div className={styles.itemsGrid}>
-        {filteredItems.length > 0 ? (
-          filteredItems.map(item => (
-            <div key={item.id} className={styles.itemCard}>
-              <div className={styles.cardImageContainer}>
-                <img src={item.images[0].path} alt={item.title} className={styles.cardImage} />
-                <button 
-                  onClick={() => toggleFavorite(item.id)} 
-                  className={styles.favoriteButton}
-                >
-                  {favorites.includes(item.id) ? (
-                    <FaHeart className={styles.favoriteIconActive} />
-                  ) : (
-                    <FaRegHeart className={styles.favoriteIcon} />
-                  )}
-                </button>
-              </div>
-              <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{highlightMatch(item.title, searchQuery)}</h3>
-                <p className={styles.cardPrice}>
-                  {item.price.toLocaleString('ru-RU')} ₽
-                </p>
-                <p className={styles.cardLocation}>
-                  {item.location.city}
-                </p>
-                <p className={styles.cardDescription}>
-                  {highlightMatch(item.details, searchQuery)}
-                </p>
-                <Link href={`/item/${item.id}`} className={styles.cardLink}>
-                  Подробнее
-                </Link>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className={styles.noResults}>
-            <FaSearch className={styles.noResultsIcon} />
-            <p>Ничего не найдено</p>
-            <button onClick={clearSearch} className={styles.clearFiltersButton}>
-              Сбросить фильтры
-            </button>
-          </div>
+      <div className={styles.extraFilters}>
+        <button className={styles.filterLink}>
+          <FaBalanceScale />
+           Ещё фильтры
+        </button>
+        {(searchQuery || investmentFrom || investmentTo || selectedSubcategory !== '') && (
+          <button onClick={clearSearch} className={styles.resetLink}>
+            <FaTimes /> Сбросить
+          </button>
         )}
       </div>
     </div>
+
+    <div className={styles.filterRow}>
+      <div className={styles.priceFilter}>
+        <input 
+          className={styles.input} 
+          placeholder="Цена от" 
+          value={investmentFrom}
+          onChange={(e) => setInvestmentFrom(e.target.value)}
+          type="number"
+        />
+        <span className={styles.priceSeparator}>—</span>
+        <input 
+          className={styles.input} 
+          placeholder="Цена до" 
+          value={investmentTo}
+          onChange={(e) => setInvestmentTo(e.target.value)}
+          type="number"
+        />
+      </div>
+      <div className={styles.sortContainer}>
+        <select 
+          className={styles.select}
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
+          <option value="default">Сортировка</option>
+          <option value="price">По цене</option>
+          <option value="title">По названию</option>
+          <option value="popularity">По популярности</option>
+        </select>
+        {sortOption !== 'default' && (
+          <button 
+            onClick={toggleSortDirection} 
+            className={styles.sortDirectionButton}
+          >
+            {sortDirection === 'asc' ? <FaArrowUp /> : <FaArrowDown />}
+          </button>
+        )}
+      </div>
+    </div>
+
+    <div className={styles.resultsCount}>
+      Найдено объектов: {filteredItems.length}
+      {selectedSubcategory && (
+        <span className={styles.selectedSubcategory}>
+          • Подкатегория: {selectedSubcategory}
+        </span>
+      )}
+      {(minPriceParam || maxPriceParam) && (
+        <span className={styles.selectedSubcategory}>
+          • Цена: {minPriceParam ? `от ${parseInt(minPriceParam).toLocaleString('ru-RU')} ₽` : ''}
+          {maxPriceParam ? ` до ${parseInt(maxPriceParam).toLocaleString('ru-RU')} ₽` : ''}
+        </span>
+      )}
+    </div>
+
+    <div className={styles.itemsGrid}>
+      {filteredItems.length > 0 ? (
+        filteredItems.map(item => (
+          <div key={item.id} className={styles.itemCard}>
+            <div className={styles.cardImageContainer}>
+              <img 
+                    src={`${process.env.NEXT_PUBLIC_IMG_URL || 'http://localhost:5000'}${item.images[0].path}`} 
+              alt={item.title} className={styles.cardImage} />
+              <button 
+                onClick={() => toggleFavorite(item.id)} 
+                className={styles.favoriteButton}
+              >
+                {favorites.includes(item.id) ? (
+                  <FaHeart className={styles.favoriteIconActive} />
+                ) : (
+                  <FaRegHeart className={styles.favoriteIcon} />
+                )}
+              </button>
+            </div>
+            <div className={styles.cardContent}>
+  <h3 className={styles.cardTitle}>{highlightMatch(item.title, searchQuery)}</h3>
+  <p className={styles.cardPrice}>
+    {item.price?.toLocaleString('ru-RU')} ₽
+  </p>
+  <p className={styles.cardLocation}>
+    {item.location?.city}
+  </p>
+  <p className={styles.cardDescription}>
+    {highlightMatch(item.description, searchQuery)}
+  </p>
+  <Link href={`/item/${item._id}`} className={styles.cardLink}>
+    Подробнее
+  </Link>
+</div>
+          </div>
+        ))
+      ) : (
+        <div className={styles.noResults}>
+          <FaSearch className={styles.noResultsIcon} />
+          <p>Ничего не найдено</p>
+          <button onClick={clearSearch} className={styles.clearFiltersButton}>
+            Сбросить фильтры
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
   )
 }
 
 // Функция для подсветки совпадений
-function highlightMatch(text: string, query: string) {
-  if (!query) return text
+function highlightMatch(text: string | undefined, query: string) {
+  if (!query || !text) return text || ''
   const parts = text.split(new RegExp(`(${query})`, 'gi'))
   return parts.map((part, i) => 
     part.toLowerCase() === query.toLowerCase() ? (

@@ -1,34 +1,75 @@
 'use client'
+import { useState } from 'react';
+import styles from './AdminPanel.module.css';
+import UsersSection from '@/components/admin/UsersSection/UsersSection'
+import AdsSection from '@/components/admin/AdsSection/AdsSection'
+import RequestsSection from '@/components/admin/RequestsSection/RequestsSection'
+type AdminSection = 'users' | 'ads' | 'requests';
 
-import styles from './in.module.css'
 
-export default function AdminDashboard() {
+
+
+
+
+
+export default function AdminPanel() {
+  const [activeSection, setActiveSection] = useState<AdminSection>('users');
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'users': return <UsersSection />;
+      case 'ads': return <AdsSection />;
+      case 'requests': return <RequestsSection />;
+      default: return <UsersSection />;
+    }
+  };
+
   return (
-    <div className={styles.dashboard}>
-      <h2>Статистика</h2>
-      <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <h3>Пользователи</h3>
-          <p>1,024</p>
+    <div className={styles.adminContainer}>
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <h1 className={styles.sidebarTitle}>Admin Dashboard</h1>
         </div>
-        <div className={styles.statCard}>
-          <h3>Консультации</h3>
-          <p>256</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>Посещения</h3>
-          <p>5,432</p>
-        </div>
+        
+        <nav>
+          <ul className={styles.navList}>
+            <li>
+              <button
+                onClick={() => setActiveSection('users')}
+                className={`${styles.navButton} ${styles.users} ${
+                  activeSection === 'users' ? styles.navButtonActive : ''
+                }`}
+              >
+                Пользователи
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveSection('ads')}
+                className={`${styles.navButton} ${styles.ads} ${
+                  activeSection === 'ads' ? styles.navButtonActive : ''
+                }`}
+              >
+                Объявления
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveSection('requests')}
+                className={`${styles.navButton} ${styles.requests} ${
+                  activeSection === 'requests' ? styles.navButtonActive : ''
+                }`}
+              >
+                Заявки
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
 
-      <div className={styles.recentActivity}>
-        <h3>Последние действия</h3>
-        <ul>
-          <li>Новый пользователь: Иван Иванов</li>
-          <li>Запрос на консультацию #1234</li>
-          <li>Обновление контента "Инвестиции"</li>
-        </ul>
-      </div>
+      <main className={styles.contentArea}>
+        {renderSection()}
+      </main>
     </div>
-  )
+  );
 }

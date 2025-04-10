@@ -1,15 +1,19 @@
 'use client'
 
-import { useState , useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
-
-
+  const router = useRouter()
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
-
+  const [activeCategory, setActiveCategory] = useState('Готовый арендный бизнес (ГАБ)')
+  const [minInvestment, setMinInvestment] = useState('')
+  const [maxInvestment, setMaxInvestment] = useState('')
+  const menuItemRefs = useRef<{[key: string]: HTMLDivElement | null}>({})
+  const submenuRefs = useRef<{[key: string]: HTMLDivElement | null}>({})
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0)
@@ -142,48 +146,200 @@ export default function Navbar() {
       'Прочее'
     ]
   };
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+  const categoryList = Object.keys(categories)
 
   const formatSlug = (text: string) =>
     encodeURIComponent(text.toLowerCase().replace(/\s+/g, '-'))
 
-  return (
-    <nav className={styles.navbar}>
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const categorySlug = activeCategory.toLowerCase().replace(/\s+/g, '-')
+    const queryParams = new URLSearchParams()
+    
+    if (minInvestment) queryParams.set('min', minInvestment)
+    if (maxInvestment) queryParams.set('max', maxInvestment)
+    
+    router.push(`/category/${categorySlug}?${queryParams.toString()}`)
+  }
+
+  const calculateSubmenuPosition = (category: string) => {
+    const menuItem = menuItemRefs.current[category]
+    const submenu = submenuRefs.current[category]
+    if (!menuItem || !submenu) return {}
+
+    const itemRect = menuItem.getBoundingClientRect()
+    const viewportWidth = window.innerWidth
+    const submenuWidth = Math.min(600, viewportWidth * 0.9)
+    
+    // Рассчитываем оптимальную позицию
+    let left = itemRect.left + itemRect.width / 2 - submenuWidth / 2
+    let right: number | undefined = undefined
+    
+    // Проверяем выход за правую границу
+    if (left + submenuWidth > viewportWidth) {
+      left = viewportWidth - submenuWidth - 10
+      right = 10
+    }
+    
+    // Проверяем выход за левую границу
+    if (left < 10) {
+      left = 10
+      right = viewportWidth - submenuWidth - 10
+    }
+    
+    // Для мобильных устройств делаем полноразмерное меню
+    if (viewportWidth < 1024) {
+      return {
+        left: '10px',
+        right: '10px',
+        width: 'calc(100vw - 20px)',
+        minWidth: 'auto'
+      }
+    }
+
+    return {
+      left: `${left}px`,
+      right: right !== undefined ? `${right}px` : undefined,
+      width: `${submenuWidth}px`,
+      minWidth: 'auto'
+    }
+  }
+
+  const renderSubmenu = (category: string) => {
+    const position = calculateSubmenuPosition(category)
+    return (
+      <div 
+        ref={el => submenuRefs.current[category] = el}
+        className={styles.submenu}
+        style={position}
+      >
+        {renderSubmenuColumns(category, categories[category])}
+      </div>
+    )
+  }
+
+  const renderSubmenuColumns = (category: string, subcategories: string[]) => {
+    const columnsCount = Math.min(Math.ceil(subcategories.length / 10), 4)
+    const chunkSize = Math.ceil(subcategories.length / columnsCount)
+    
+    return (
+      <div className={styles.submenuColumns}>
+        {chunkArray(subcategories, chunkSize).map((column, i) => (
+          <div key={i} className={styles.submenuColumn}>
+            {column.map((subcategory) => (
+              <Link
+                key={subcategory}
+                href={`/category/${formatSlug(category)}?subcategory=${formatSlug(subcategory)}`}
+                className={styles.submenuLink}
+              >
+                <span className={styles.submenuIcon}>→</span>
+                {subcategory}
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+   return (
+    <nav className={`${styles.navbar} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.fullWidthContainer}>
         <div className={styles.contentContainer}>
-          <ul className={styles.mainMenu}>
-            {Object.keys(categories).map((category) => (
-              <li
-                key={category}
-                className={styles.menuItem}
-                onMouseEnter={() => setHoveredCategory(category)}
-                onMouseLeave={() => setHoveredCategory(null)}
-              >
-                <span className={styles.menuLink}>
-                  {category}
-                  <span className={styles.menuIcon}>⌄</span>
-                </span>
+          <div className={styles.menuRows}>
+            {/* Первый ряд категорий */}
+            <div className={styles.menuRow}>
+              {categoryList.slice(0, 5).map((category) => (
+                <div
+                  key={category}
+                  ref={el => menuItemRefs.current[category] = el}
+                  className={styles.menuItem}
+                  onMouseEnter={() => setHoveredCategory(category)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                >
+                  <button
+                    className={`${styles.menuLink} ${activeCategory === category ? styles.activeCategory : ''}`}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                    <span className={styles.menuIcon}>⌄</span>
+                  </button>
+                  {hoveredCategory === category && renderSubmenu(category)}
+                </div>
+              ))}
+            </div>
 
-                {hoveredCategory === category && (
-                  <div className={styles.submenu}>
-                    <div className={styles.submenuInner}>
-                      {categories[category].map((subcategory) => (
-                        <Link
-                          key={subcategory}
-                          href={`/category/${formatSlug(category)}?subcategory=${formatSlug(subcategory)}`}
-                          className={styles.submenuLink}
-                        >
-                          <span className={styles.submenuIcon}>→</span>
-                          {subcategory}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+            {/* Второй ряд категорий */}
+            <div className={styles.menuRow}>
+              {categoryList.slice(5).map((category) => (
+                <div
+                  key={category}
+                  ref={el => menuItemRefs.current[category] = el}
+                  className={styles.menuItem}
+                  onMouseEnter={() => setHoveredCategory(category)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                >
+                  <button
+                    className={`${styles.menuLink} ${activeCategory === category ? styles.activeCategory : ''}`}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                    <span className={styles.menuIcon}>⌄</span>
+                  </button>
+                  {hoveredCategory === category && renderSubmenu(category)}
+                </div>
+              ))}
+            </div>
+          </div>
+          <form onSubmit={handleSubmit} className={styles.priceFilter}>
+            <div className={styles.filterGroup}>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="number"
+                  placeholder="От"
+                  className={styles.filterInput}
+                  value={minInvestment}
+                  onChange={(e) => setMinInvestment(e.target.value)}
+                />
+                <span className={styles.currency}>₽</span>
+              </div>
+            </div>
+
+            <div className={styles.filterGroup}>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="number"
+                  placeholder="До"
+                  className={styles.filterInput}
+                  value={maxInvestment}
+                  onChange={(e) => setMaxInvestment(e.target.value)}
+                />
+                <span className={styles.currency}>₽</span>
+              </div>
+            </div>
+
+            <button type="submit" className={styles.filterButton}>
+              Найти
+            </button>
+          </form>
         </div>
       </div>
     </nav>
   )
+}
+
+// Вспомогательная функция для разделения массива на части
+function chunkArray(array: any[], size: number) {
+  const result = []
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size))
+  }
+  return result
 }
