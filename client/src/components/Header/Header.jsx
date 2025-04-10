@@ -6,6 +6,8 @@ import styles from './header.module.css'
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 
+
+
 export default function Header() {
   const pathname = usePathname()
   const user = useSelector(state => state.user.user)
@@ -15,67 +17,166 @@ export default function Header() {
   const [activeCategory, setActiveCategory] = useState(null)
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
   const [currentLanguage, setCurrentLanguage] = useState('ru')
+  const [currentCity, setCurrentCity] = useState('Москва')
+  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false)
+const ArabFlag = '/country/arab.png'
+const UsaFlag = '/country/usa.svg'
+const RuFlag = '/country/ru.svg'
+const Logo = '/logo.png'
+  // Список крупных российских городов
+  const russianCities = [
+    'Москва',
+    'Санкт-Петербург',
+    'Новосибирск',
+    'Екатеринбург',
+    'Казань',
+    'Нижний Новгород',
+    'Челябинск',
+    'Самара',
+    'Омск',
+    'Ростов-на-Дону',
+    'Уфа',
+    'Красноярск',
+    'Пермь',
+    'Воронеж',
+    'Волгоград',
+    'Краснодар',
+    'Саратов',
+    'Тюмень',
+    'Тольятти',
+    'Ижевск',
+    'Барнаул',
+    'Ульяновск',
+    'Иркутск',
+    'Хабаровск',
+    'Ярославль',
+    'Владивосток',
+    'Махачкала',
+    'Томск',
+    'Оренбург',
+    'Кемерово'
+  ]
 
   const categories = {
-    'Коммерческая недвижимость': [
-      'Торговый центр (здание)',
-      'Торговое помещение / магазин',
-      'Рынок / оптовая база',
-      'Офисный центр (здание)',
-      'Офисное помещение',
-      'Складской комплекс',
-      'Складское помещение',
-      'Гостиница',
-      'Хостел',
-      'Спортивно-оздоровительный комплекс',
-      'Автосервис',
-      'Автосалон',
-      'АЗС',
-      'Помещение свободного назначения',
-      'Здание свободного назначения'
+    'Готовый арендный бизнес (ГАБ)': [
+      'Продажа готового бизнеса',
+      'Торгово-развлекательные центры',
+      'Торговые центры',
+      'Рынки | оптовые базы',
+      'Складские комплексы', 
+      'Складские помещения',
+      'Офисные центры (здания)',
+      'Офисные помещения',
+      'Коммерческая зарубежная недвижимость',
+      'Торговые площади',
+      'Гостиничный бизнес',
+      'Отели | апартаменты | хостелы',
+      'Базы отдыха',
+      'Рестораны | бары | кофе',
+      'Сфера красоты',
+      'Бизнес в сфере услуг',
+      'Арендный бизнес',
+      'Готовый бизнес под ключ',
+      'Медицинские центры',
+      'Учреждения для детей',
+      'Помещения свободного назначения',
+      'Здания свободного назначения',
+      'Автосалоны | автосервисы',
+      'Автозаправки (АЗС)',
+      'Прочее'
     ],
     'Жилая недвижимость': [
-      'Квартира',
-      'Комната',
-      'Частный дом / коттедж',
-      'Таунхаус',
-      'Многоквартирный жилой комплекс'
+      'Квартиры в элитных ЖК',
+      'Квартиры в новостройках',
+      'Квартиры вторичка',
+      'Жилые помещения',
+      'Апартаменты',
+      'Таунхаусы',
+      'Коттеджи',
+      'Загородные дома',
+      'Элитные особняки',
+      'Элитная зарубежная недвижимость',
+      'Многоквартирные жилые комплексы',
+      'Прочее'
     ],
     'Земельные участки': [
       'Земля под ИЖС',
-      'Земельный участок под коммерческую застройку'
+      'Земля ЛПХ',
+      'Земля под коммерческую застройку',
+      'Промышленная земля',
+      'Земля сельскохозяйственного назначения',
+      'Земля для ведения садоводства или огородничества',
+      'Прочее'
     ],
     'Производство': [
-      'Деревоперерабатывающее предприятие',
-      'Металлообрабатывающее предприятие',
-      'Пищевое производство',
+      'Деревообрабатывающие предприятия',
+      'Металлообрабатывающие предприятия',
       'Производство строительных материалов',
       'Текстильное производство',
-      'Химическое производство'
+      'Пищевое производство',
+      'Химическое производство',
+      'Производство',
+      'Заводы',
+      'Фабрики',
+      'Прочее'
     ],
-    'Сельхоз активы': [
+    'Агро бизнес': [
       'Птицефабрика',
       'Животноводческий комплекс',
       'Тепличный комплекс',
       'Зерновое хозяйство',
       'Элеватор',
-      'Сад / виноградник'
+      'Маслозавода',
+      'Молокозаводы',
+      'Сады | виноградники',
+      'Прочее'
     ],
-    'Рестораны и развлечения': [
-      'Ресторан/бар/кафе',
-      'Развлекательный комплекс'
+    'Банковские услуги': [
+      'Кредиты для бизнеса',
+      'Кредиты под залог',
+      'Кредит наличными',
+      'Ипотечные программы',
+      'Лизинг для юридических лиц',
+      'Банковские гарантии',
+      'Рефинансирование кредита',
+      'Автокредиты',
+      'Проектное финансирование',
+      'Факторинг',
+      'Прочее'
     ],
-    'Спецтехника и транспорт': [
-      'Грузовики и прицепы',
-      'Строительная техника',
-      'Сельхоз техника',
-      'Автобусы',
-      'Водный транспорт'
+    'Сферы услуг': [
+      'Строительство и ремонт',
+      'Бухгалтерские услуги',
+      'Привлечение инвестиций',
+      'Юридическое сопровождение сделок',
+      'Списание долгов для юридических лиц',
+      'Списание долгов для физических лиц',
+      'Исправление кредитной истории',
+      'Проверка кредитной истории',
+      'Оценка имущества',
+      'Проверка юридических лиц и предпринимателей',
+      'Узнать кадастровый номер',
+      'Проверка объектов недвижимости на залоги и обременения',
+      'Комплектация объектов и гостиничных номеров',
+      'Прочее'
     ],
-    'Финансовые активы': [
-      'Ценные бумаги',
-      'Дебиторская задолженность',
-      'Нематериальные активы'
+    'Инвестиции': [
+      'Управление крупным и частным капиталом',
+      'Инвестиции'
+    ],
+    'Для состоятельных клиентов': [
+      'Аренда бизнес Джетов',
+      'Аренда вертолетов',
+      'Аренда яхт',
+      'Прочее'
+    ],
+    'Реабилитация компаний': [
+      'Разблокировка 115 ФЗ',
+      'Профилактика блокировок по 115 ФЗ',
+      'Анализ бизнеса + абонентское обслуживание',
+      'Проверка контрагентов для исключения из цепочки',
+      'Рекомендации по налоговому сектору',
+      'Прочее'
     ]
   }
 
@@ -118,12 +219,25 @@ export default function Header() {
     setCurrentLanguage(lang)
     setLanguageDropdownOpen(false)
   }
+  const toggleCityDropdown = () => {
+    setIsCityDropdownOpen(!isCityDropdownOpen)
+    // Закрываем другие выпадающие списки при открытии
+    if (!isCityDropdownOpen) {
+      setLanguageDropdownOpen(false)
+    }
+  }
 
+  const selectCity = (city) => {
+    setCurrentCity(city)
+    setIsCityDropdownOpen(false)
+    // Здесь можно добавить сохранение выбора города в localStorage
+    // или отправку на сервер
+  }
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-        DSI CLUB
+        <img src={Logo} alt="Логотип" />
         </Link>
 
         {isMobile ? (
@@ -157,26 +271,41 @@ export default function Header() {
                   <div className={styles.navSection}>
                     <h4 className={styles.sectionTitle}>Навигация</h4>
                     <nav className={styles.mobileNav}>
+                    <Link href="/about" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+  О нас
+</Link>
+
+<Link href="/franchise" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+  </svg>
+  Бесплатная франшиза
+</Link>
+<Link href="/advertising" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+  Реклама на платформе
+</Link>
+
+<Link href="/careers" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+  Вакансии
+</Link>
+
                       <Link href="/contacts" className={styles.navLink} onClick={closeAll}>
                         <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                         Контакты
                       </Link>
-                      
-                      <button 
-                        onClick={() => {
-                          setIsModalOpen(true)
-                          closeAll()
-                        }} 
-                        className={styles.navLink}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                      >
-                        <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Задать вопрос
-                      </button>
+        
                       
                       <Link href={getLkUrl('notifications')} className={styles.navLink} onClick={closeAll}>
                         <div className="relative">
@@ -202,7 +331,48 @@ export default function Header() {
                       </Link>
                     </nav>
                   </div>
-
+                  <div className={styles.citySelector}>
+              <button 
+                className={styles.cityButton}
+                onClick={toggleCityDropdown}
+              >
+                <svg className={styles.cityIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {currentCity}
+                <svg 
+                  className={`${styles.cityArrow} ${isCityDropdownOpen ? styles.rotated : ''}`}
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              
+              {isCityDropdownOpen && (
+                <div className={styles.cityDropdown}>
+                  <div className={styles.citySearch}>
+                    <input 
+                      type="text" 
+                      placeholder="Поиск города..." 
+                      className={styles.citySearchInput}
+                    />
+                  </div>
+                  <div className={styles.cityList}>
+                    {russianCities.map(city => (
+                      <button
+                        key={city}
+                        className={`${styles.cityOption} ${currentCity === city ? styles.activeCity : ''}`}
+                        onClick={() => selectCity(city)}
+                      >
+                        {city}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
                   <div className={styles.categoriesSection}>
                     <h4 className={styles.sectionTitle}>Категории</h4>
                     <div className={styles.categoriesList}>
@@ -243,9 +413,9 @@ export default function Header() {
                   </div>
                 </div>
 
-                <button className={styles.whiteSpace} onClick={()=>{closeAll(); setIsModalOpen(true)}}>
+                {/* <button className={styles.whiteSpace} onClick={()=>{closeAll(); setIsModalOpen(true)}}>
                   Оставить заявку
-                </button>
+                </button> */}
               </div>
             )}
           </>
@@ -257,7 +427,12 @@ export default function Header() {
                   className={styles.languageButton}
                   onClick={toggleLanguageDropdown}
                 >
-                  {currentLanguage === 'ru' ? 'Рус' : currentLanguage === 'en' ? 'Eng' : 'العربية'}
+                  {currentLanguage === 'ru' ? 
+                    <img src={RuFlag} alt="Русский" className={styles.countrySvg} /> : 
+                    currentLanguage === 'en' ? 
+                    <img src={UsaFlag} alt="Английский" className={styles.countrySvg} /> : 
+                    <img src={ArabFlag} alt="Арабский" className={styles.countrySvg} />
+                  }
                   <svg 
                     className={`${styles.languageArrow} ${languageDropdownOpen ? styles.rotated : ''}`}
                     viewBox="0 0 20 20"
@@ -272,31 +447,100 @@ export default function Header() {
                       className={`${styles.languageOption} ${currentLanguage === 'ru' ? styles.activeLanguage : ''}`}
                       onClick={() => selectLanguage('ru')}
                     >
-                      Русский
+                      <img src={RuFlag} alt="Русский" className={styles.countrySvg} />
                     </button>
                     <button 
                       className={`${styles.languageOption} ${currentLanguage === 'en' ? styles.activeLanguage : ''}`}
                       onClick={() => selectLanguage('en')}
                     >
-                      English
+                      <img src={UsaFlag} alt="Английский" className={styles.countrySvg} />
                     </button>
                     <button 
                       className={`${styles.languageOption} ${currentLanguage === 'ar' ? styles.activeLanguage : ''}`}
                       onClick={() => selectLanguage('ar')}
                     >
-                      العربية
+                      <img src={ArabFlag} alt="Арабский" className={styles.countrySvg} />
                     </button>
                   </div>
                 )}
               </div>
-
-              <Link href="/contacts" className={styles.navLink}>
-                <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              <div className={styles.citySelector}>
+              <button 
+                className={styles.cityButton}
+                onClick={toggleCityDropdown}
+              >
+                <svg className={styles.cityIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Контакты
-              </Link>
+                {currentCity}
+                <svg 
+                  className={`${styles.cityArrow} ${isCityDropdownOpen ? styles.rotated : ''}`}
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
               
+              {isCityDropdownOpen && (
+                <div className={styles.cityDropdown}>
+                  <div className={styles.citySearch}>
+                    <input 
+                      type="text" 
+                      placeholder="Поиск города..." 
+                      className={styles.citySearchInput}
+                    />
+                  </div>
+                  <div className={styles.cityList}>
+                    {russianCities.map(city => (
+                      <button
+                        key={city}
+                        className={`${styles.cityOption} ${currentCity === city ? styles.activeCity : ''}`}
+                        onClick={() => selectCity(city)}
+                      >
+                        {city}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+              <Link href="/about" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+  О нас
+</Link>
+
+<Link href="/franchise" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+  </svg>
+  Бесплатная франшиза
+</Link>
+<Link href="/advertising" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+  Реклама на платформе
+</Link>
+
+<Link href="/careers" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+  Вакансии
+</Link>
+
+<Link href="/contacts" className={styles.navLink}>
+  <svg className={styles.icon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+  </svg>
+  Контакты
+</Link>
+{/*               
               <button 
                 onClick={() => setIsModalOpen(true)} 
                 className={styles.navLink}
@@ -306,7 +550,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Задать вопрос
-              </button>
+              </button> */}
               
               <Link href={getLkUrl('notifications')} className={styles.navLink}>
                 <div className="relative">
@@ -338,9 +582,9 @@ export default function Header() {
                 {user && user.name ? user.name : 'Вход'}
               </Link>
             </nav>
-            <div className={styles.container}>
+            {/* <div className={styles.container}>
               <button className={styles.button} onClick={()=>{setIsModalOpen(true)}}>Оставить заявку</button>
-            </div>
+            </div> */}
           </>
         )}
 

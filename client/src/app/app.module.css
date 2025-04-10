@@ -143,15 +143,16 @@
 .listingButton:hover {
   background-color: #15803d;
 }
-
 .benefitsSection {
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #166534;
-  color: white;
+  background-color: white; /* Белый фон */
+  color: #333; /* Темный текст */
   border-radius: 0.75rem;
   padding: 2rem;
   margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Легкая тень */
+  border: 1px solid #e5e7eb; /* Светлая граница */
 }
 
 .benefitsTitle {
@@ -159,6 +160,7 @@
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-align: center;
+  color: #166534; /* Темно-зеленый для заголовка */
 }
 
 .benefitsGrid {
@@ -167,21 +169,39 @@
   gap: 2rem;
 }
 
+@media (min-width: 768px) {
+  .benefitsGrid {
+    grid-template-columns: repeat(3, 1fr); /* 3 колонки на десктопе */
+  }
+}
+
 .benefitCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: white;
   border-radius: 0.5rem;
+  border: 1px solid #e5e7eb; /* Светлая граница */
+  transition: all 0.3s ease;
+}
+
+.benefitCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(163, 230, 180, 0.2); /* Фисташковая тень */
 }
 
 .benefitIcon {
-  background-color: #22c55e;
+  background-color: #a3d9a5; /* Фисташковый цвет */
   padding: 1rem;
   border-radius: 9999px;
   margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.benefitCard:hover .benefitIcon {
+  background-color: #86c486; /* Темнее при наведении */
 }
 
 .benefitIcon svg {
@@ -194,6 +214,12 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: #166534; /* Темно-зеленый для заголовков карточек */
+}
+
+.benefitCard p {
+  color: #4b5563; /* Серый для текста */
+  line-height: 1.5;
 }
 
 .listingActions {

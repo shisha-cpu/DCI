@@ -6,33 +6,35 @@ import styles from './filter.module.css'
 
 export default function FilterSection({ onCategoryChange }) {
   const router = useRouter()
-  const [activeCategory, setActiveCategory] = useState('Коммерческая недвижимость')
+  const [activeCategory, setActiveCategory] = useState('Готовый арендный бизнес (ГАБ)')
   const [minInvestment, setMinInvestment] = useState('')
   const [maxInvestment, setMaxInvestment] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-
   const categories = [
-    'Коммерческая недвижимость',
+    'Готовый арендный бизнес (ГАБ)',
     'Жилая недвижимость',
     'Земельные участки',
     'Производство',
-    'Сельхоз активы',
-    'Рестораны и развлечения',
-    'Спецтехника и транспорт',
-    'Финансовые активы'
-  ]
+    'Агро бизнес',
+    'Банковские услуги',
+    'Сферы услуг',
+    'Инвестиции',
+    'Для состоятельных клиентов',
+    'Реабилитация компаний'
+  ];
 
   // Map categories to background image URLs
   const categoryBackgrounds = {
-    'Коммерческая недвижимость': 'https://mperspektiva.ru/upload/iblock/87b/87bbd1f76a65d0473bc7326a2dd0a9db.png',
-    'Жилая недвижимость': 'https://avatars.mds.yandex.net/i?id=128648de188af4084304a70b42339711_l-4580245-images-thumbs&n=13',
-    'Земельные участки': 'https://avatars.mds.yandex.net/i?id=f68c7e8b38e481ab29461315dd39d1ae_l-5204637-images-thumbs&n=13g',
-    'Производство': 'https://avatars.mds.yandex.net/i?id=c47dd835e053dfa814533ba2f48234f4_l-5222129-images-thumbs&n=13',
-    'Сельхоз активы': 'https://vologodskij-r19.gosweb.gosuslugi.ru/netcat_files/483/2345/the_importance_of_the_commodities_market.jpg',
-    'Рестораны и развлечения': 'https://aledo-pro.ru/images/projects/img_64155c9bdeebd1_76912318.webp',
-    'Спецтехника и транспорт': 'https://avatars.mds.yandex.net/get-altay/11421909/2a0000019104e92ce3c977e0c26545ae66f8/orig',
-    'Финансовые активы': 'https://avatars.mds.yandex.net/i?id=c35cbc86fdfca021af13b635d39eaddb_l-4400724-images-thumbs&n=13',
-    'Готовый бизнес': 'https://yandex-images.clstorage.net/u9HEE7417/c8c70dgi5/Rz7_IbOVXzhdk65KbGtKJtn06Z8eUp20Q2zV8dEGtnyvFvfRQrBpQv0MwYeA_xbWJFgDxyTs0GzY3IGpm5oA0AoHmizqlCYkXYf_ZkVbIhaZodnqEgeV0FNxscH4nx-pTtdWONdQ8KZRbYGqxat-rzwFrnd9LJTgYTnYbaevFQFvji_R71nKIFnHy6I4a2aeXaV1Z6IvRQ0X-JhcDGeL-XJDZuCzeKROyUk1-m2bK7c8QWY6tRDkWPUpXLFPB-khzw6zRbtR2lit2_dOWEPiioklFcMqw7XZc8DIgGyzh-3yZ86cPygwpt3ZpdLBowMbuN2KQjX8eLCpAfT5-_MZqduyL7F74aZAdaOL_gS37lLFgV2vMrdhXYtMUGCUw7dhQmu-mNscSM5NbaHenYOHc-BpBsq1lPyUUWlo9SeD-VXT0rd1h72mYD0_q5LEt9IihbVtw56raYXbRJAU4FdzjWb3rkjP7Eyu4TENBkHbT4u0NdbidXAMsE0R4OG3n2kB58bHLe8NRrBl53NegGt6uqmhfcNur-VZO0TUoKjXCylWE3rgE8yIzuVhVYLthyufrE2W6mmUZPzZKZwd4wupDdfqw6FrnYoUoSv3Gjw3WmJ1vRl7tk8VqTd0hFB09_MRDktO3P_41DrhydWqFZM_A2Q1itI9hIC8ZW0Qpe8TabFvxifRgxWK2HXnu0bcf-reFalF66rHHQ1_rFTYfF87ua43ZiSbfFi6JR2pjpUr9yMkQYqSIQQIVI0p3PH7g_ldT-p_xb-V8gipq0OqaFemosF17avCMxXBEwx0KKDPs4neSwowF6hQqrUlSZqBg__34FUyHvF01MhJUYBxA-MpPQd-d-HfBapMDZN3vuArZhYp_QXDlsMViRdc9LAQA3upfmO-oN-cMJK1GZH68ZdT10gZ-uI9fGBUFS1Q3U-z6T2r1sOxA7U6SDkHO3bcW-LWedE5c-qf8blzUOAMdPe4'
+    'Готовый арендный бизнес (ГАБ)': './filter/1.jpg',
+    'Жилая недвижимость': './filter/2.jpg',
+    'Земельные участки': './filter/3.jpg',
+    'Агро бизнес': './filter/4.jpg',
+    'Производство' : './filter/5.jpg',
+    'Банковские услуги':'./filter/6.jpg',
+    'Сферы услуг': './filter/7.jpg',
+    'Инвестиции': './filter/7.jpg',
+    'Для состоятельных клиентов': './filter/9.jpg',
+    'Реабилитация компаний': './filter/10.jpg'
   }
 
   const handleCategoryChange = (category) => {
@@ -43,7 +45,7 @@ export default function FilterSection({ onCategoryChange }) {
   const handleSubmit = (e) => {
     e.preventDefault()
   
-    // Преобразуем категорию в slug (например, "Коммерческая недвижимость" -> "коммерческая-недвижимость")
+
     const categorySlug = activeCategory.toLowerCase().replace(/\s+/g, '-')
   
     // Формируем параметры URL

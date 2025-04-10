@@ -3,24 +3,31 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 1000;
   padding: 0.75rem 0;
-  margin: 0;
-  max-width: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   transition: all 0.3s ease;
-overflow: hidden;
+  
+
+  opacity: 1; /* если было меньше 1 */
+  transform: none
 }
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1800px;
+
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
+.countrySvg{
+  width: 15px;
+}
 .whiteSpace {
   background-color: #28a745;
   margin-top: 20px !important;
@@ -385,6 +392,9 @@ overflow: hidden;
   .button {
     display: none;
   }
+  .logo img{
+    max-width: 60px !important; 
+  }
 }
 
 @media (min-width: 769px) {
@@ -395,6 +405,7 @@ overflow: hidden;
   .mobileMenu {
     display: none;
   }
+
 }
 
 /* Menu Sections */
@@ -561,9 +572,11 @@ overflow: hidden;
   border: 1px solid #a3d9a5;
   border-radius: 8px;
   box-shadow: 0 8px 16px rgba(0, 128, 0, 0.1);
-  z-index: 10;
-  min-width: 120px;
+  z-index: 1001; /* Больше чем у header */
+  /* min-width: 120px; */
   animation: fadeInScale 0.25s ease-out;
+  transform: translateZ(0); /* Создаёт новый контекст поверх всех */
+  will-change: transform;
 }
 
 @keyframes fadeInScale {
@@ -598,4 +611,292 @@ overflow: hidden;
 .activeLanguage {
   background-color: #d4efd9;
   font-weight: 600;
+}
+
+.logo img{
+  max-width: 100px;
+}
+/* Стили для выбора города */
+.citySelector {
+  position: relative;
+  margin-right: 20px;
+}
+
+.cityButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  font-weight: 500;
+  color: #333;
+}
+
+.cityButton:hover {
+  background-color: #f5f5f5;
+}
+
+.cityIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.cityArrow {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+
+.cityArrow.rotated {
+  transform: rotate(180deg);
+}
+
+.cityDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 0;
+  width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.citySearch {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.citySearchInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+
+.cityList {
+  padding: 8px 0;
+}
+
+.cityOption {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cityOption:hover {
+  background-color: #f5f5f5;
+}
+
+.cityOption.activeCity {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Мобильные стили */
+.citySelectorMobile {
+  position: relative;
+}
+
+.cityButtonMobile {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.cityDropdownMobile {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 0;
+  width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+/* Добавьте это в ваш header.module.css */
+
+/* Адаптация для маленьких мониторов ПК (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1624px) {
+  .container {
+    padding: 0 1rem;
+    max-width: 100%;
+ 
+  }
+
+  .logo img {
+    max-width: 80px !important;
+  }
+
+  .nav {
+    gap: 0.5rem;
+  }
+
+  .navLink {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .navLink span {
+    display: none; /* Скрываем текст, оставляем только иконки */
+  }
+
+  .navLink .icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-right: 0;
+  }
+
+  .authButton {
+    margin-left: 15px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .authButton span {
+    display: none; /* Скрываем текст, оставляем только иконку */
+  }
+
+  .languageSelector {
+    margin-right: 0.5rem;
+  }
+
+  .languageButton {
+    padding: 6px 8px;
+  }
+
+  .languageButton span {
+    display: none; /* Скрываем текст, оставляем только флаг */
+  }
+
+  .citySelector {
+    margin-right: 10px;
+  }
+  .nav {
+    min-height: 100px !important;
+
+  }
+  .cityButton {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+  }
+
+  .cityButton span {
+    display: none; /* Скрываем текст, оставляем только иконку */
+  }
+
+  .cityIcon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0;
+  }
+
+  /* Адаптация выпадающих списков */
+  .languageDropdown,
+  .cityDropdown {
+    width: 180px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Дополнительная адаптация для очень узких экранов (769px - 900px) */
+@media (min-width: 769px) and (max-width: 900px) {
+  .nav {
+    gap: 0.3rem;
+  }
+
+  .navLink {
+    padding: 0.4rem;
+  }
+
+  .authButton {
+    margin-left: 10px;
+    padding: 0.4rem 0.6rem;
+  }
+}
+/* Добавьте в header.module.css */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* ... предыдущие стили для маленьких экранов ... */
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap; /* Разрешаем перенос на новую строку */
+    align-items: center;
+    gap: 0.5rem;
+    max-height: 60px; /* Ограничиваем высоту, чтобы было 2 строки */
+    overflow: hidden; /* Скрываем то, что не поместилось */
+  }
+
+  .navLink {
+    flex: 0 0 auto; /* Запрещаем растягивание элементов */
+    white-space: nowrap;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  /* Показываем текст только для важных элементов */
+  .navLink.important span {
+    display: inline;
+  }
+
+  /* Делаем кнопку входа компактной */
+  .authButton {
+    margin-left: 10px;
+    padding: 0.5rem;
+    min-width: auto;
+  }
+
+  /* Делаем селекторы городов и языков компактными */
+  .citySelector, 
+  .languageSelector {
+    margin-right: 5px;
+  }
+
+  .cityButton, 
+  .languageButton {
+    padding: 6px;
+  }
+}
+
+/* Для очень узких экранов (769px - 850px) */
+@media (min-width: 769px) and (max-width: 850px) {
+  .nav {
+    max-height: 80px; /* Увеличиваем высоту для 2 строк */
+    gap: 0.3rem;
+  }
+
+  .navLink {
+    padding: 0.3rem;
+    font-size: 0.8rem;
+  }
+
+  /* Скрываем менее важные элементы */
+  .navLink:not(.important) {
+    display: none;
+  }
 }

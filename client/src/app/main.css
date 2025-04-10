@@ -6,9 +6,9 @@
 }
 body{
     background-color: rgba(248, 248, 248, 0.664);
-    user-select: none;
+    /* user-select: none;
     -webkit-user-select: none;
-    -ms-user-select: none;
+    -ms-user-select: none; */
 }
 a{
     text-decoration: none;

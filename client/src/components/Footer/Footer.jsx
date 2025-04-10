@@ -29,45 +29,25 @@ export default function Footer() {
             </ul>
           </div>
           <div className={styles.ratingContainer}>
-      <div className={styles.ratingHeader}>
-        Оценка  компании <strong>DSI CLUB</strong><br />
-
-      </div>
-      
-      <div className={styles.ratingBody}>
-        <div className={styles.ratingValue}>
-          <span className={styles.ratingNumber}>4.6</span>
-          <div className={styles.starsContainer}>
-            <span className={styles.star}>★</span>
-            <span className={styles.star}>★</span>
-            <span className={styles.star}>★</span>
-            <span className={styles.star}>★</span>
-            <span className={`${styles.star} ${styles.emptyStar}`}>★</span>
+            <div className={styles.ratingHeader}>
+              Оценка компании <strong>DSI CLUB</strong><br />
+            </div>
+            <div className={styles.ratingBody}>
+              <div className={styles.ratingValue}>
+                <span className={styles.ratingNumber}>4.6</span>
+                <div className={styles.starsContainer}>
+                  <span className={styles.star}>★</span>
+                  <span className={styles.star}>★</span>
+                  <span className={styles.star}>★</span>
+                  <span className={styles.star}>★</span>
+                  <span className={`${styles.star} ${styles.emptyStar}`}>★</span>
+                </div>
+              </div>
+              <div className={styles.reviewsCount}>
+                Оценили: <span>1</span>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div className={styles.reviewsCount}>
-          Оценили: <span>1</span>
-        </div>
-      </div>
-    </div>
-          {/* <div>
-            <h4 className={styles.sectionTitle}>Подписка</h4>
-            <p className={styles.subscribeText}>
-              Подпишитесь на новости и актуальные предложения
-            </p>
-            <form className={styles.subscribeForm}>
-              <input 
-                type="email" 
-                placeholder="Ваш email" 
-                className={styles.emailInput}
-                required
-              />
-              <button type="submit" className={styles.submitButton}>
-                OK
-              </button>
-            </form>
-          </div> */}
         </div>
         <div className={styles.copyright}>
           <p>© {new Date().getFullYear()} DSI CLUB. Все права защищены.</p>
